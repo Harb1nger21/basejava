@@ -18,10 +18,8 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        //Resume resume = new Resume();
         for (int i = 0; i < countElements; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                //resume.uuid = uuid;
                 return storage[i];
             }
         }
