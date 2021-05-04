@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    public final Resume[] storage = new Resume[10000];
+    public final Resume[] storage = new Resume[10_000];
     private int countElements = 0;
 
     public void clear() {
@@ -16,13 +16,13 @@ public class ArrayStorage {
         countElements = 0;
     }
 
-    public void save(Resume r) {
-        if (this.get(r.getUuid()) != null) {
-            System.out.println("ERROR: this resume is already in");
-        } else if (countElements == 10000) {
+    public void save(Resume resume) {
+        if (get(resume.getUuid()) != null) {
+            System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
+        } else if (countElements == storage.length) {
             System.out.println("ERROR: ArrayStorage is already has 10000 resume");
         } else {
-            storage[countElements] = r;
+            storage[countElements] = resume;
             countElements++;
         }
     }
@@ -33,18 +33,18 @@ public class ArrayStorage {
                 return storage[i];
             }
         }
-        System.out.println("This resume is not found");
+        System.out.printf("Resume with %s is not found\n", uuid);
         return null;
     }
 
     public void delete(String uuid) {
-        if (this.get(uuid) == null) {
-            System.out.println("ERROR: this resume is not found");
+        if (get(uuid) == null) {
+            System.out.printf("ERROR: resume with %s is not found\n", uuid);
         } else {
             for (int i = 0; i < countElements; i++) {
                 if (storage[i].getUuid().equals(uuid)) {
-                    for (int j = i; j < countElements; j++){
-                        storage[j] = storage[j+1];
+                    for (int j = i; j < countElements; j++) {
+                        storage[j] = storage[j + 1];
                     }
                     countElements--;
                 }
@@ -64,8 +64,8 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        if (this.get(resume.getUuid()) == null) {
-            System.out.println("ERROR: this resume is not found");
+        if (get(resume.getUuid()) == null) {
+            System.out.printf("ERROR: resume with %s is not found\n", resume.getUuid());
         } else {
             for (int i = 0; i < countElements; i++) {
                 if (storage[i].getUuid().equals(resume.getUuid())) {
