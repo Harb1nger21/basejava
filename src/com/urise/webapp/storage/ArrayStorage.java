@@ -17,7 +17,7 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (get(resume.getUuid()) != null) {
+        if (findIndex(resume.getUuid()) != -1) {
             System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
         } else if (countElements == storage.length) {
             System.out.println("ERROR: ArrayStorage is already has 10000 resume");
@@ -28,27 +28,20 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < countElements; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
-        }
-        System.out.printf("Resume with %s is not found\n", uuid);
+        if (findIndex(uuid) != -1) {
+            return storage[findIndex(uuid)];
+        } else
+            System.out.printf("Resume with %s is not found\n", uuid);
         return null;
     }
 
     public void delete(String uuid) {
-        if (get(uuid) == null) {
+        if (findIndex(uuid) == -1) {
             System.out.printf("ERROR: resume with %s is not found\n", uuid);
         } else {
-            for (int i = 0; i < countElements; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    for (int j = i; j < countElements; j++) {
-                        storage[j] = storage[j + 1];
-                    }
-                    countElements--;
-                }
-            }
+            if (countElements - findIndex(uuid) >= 0)
+                System.arraycopy(storage, findIndex(uuid) + 1, storage, findIndex(uuid), countElements - findIndex(uuid));
+            countElements--;
         }
     }
 
@@ -64,15 +57,20 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        if (get(resume.getUuid()) == null) {
+        if (findIndex(resume.getUuid()) == -1) {
             System.out.printf("ERROR: resume with %s is not found\n", resume.getUuid());
         } else {
-            for (int i = 0; i < countElements; i++) {
-                if (storage[i].getUuid().equals(resume.getUuid())) {
-                    storage[i] = resume;
-                    System.out.println("Update success");
-                }
+            storage[findIndex(resume.getUuid())] = resume;
+            System.out.println("Update success");
+        }
+    }
+
+    private int findIndex(String uuid) {
+        for (int i = 0; i < countElements; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return i;
             }
         }
+        return -1;
     }
 }
