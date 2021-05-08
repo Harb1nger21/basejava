@@ -28,19 +28,23 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (findIndex(uuid) != -1) {
-            return storage[findIndex(uuid)];
-        } else
-            System.out.printf("Resume with %s is not found\n", uuid);
+        int index = findIndex(uuid);
+
+        if (index != -1) {
+            return storage[index];
+        }
+        System.out.printf("ERROR: resume with %s is not found\n", uuid);
         return null;
     }
 
     public void delete(String uuid) {
-        if (findIndex(uuid) == -1) {
+        int index = findIndex(uuid);
+
+        if (index == -1) {
             System.out.printf("ERROR: resume with %s is not found\n", uuid);
         } else {
-            if (countElements - findIndex(uuid) >= 0)
-                System.arraycopy(storage, findIndex(uuid) + 1, storage, findIndex(uuid), countElements - findIndex(uuid));
+            if (countElements - index >= 0)
+                System.arraycopy(storage, index + 1, storage, index, countElements - index);
             countElements--;
         }
     }
@@ -57,10 +61,12 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        if (findIndex(resume.getUuid()) == -1) {
+        int index = findIndex(resume.getUuid());
+
+        if (index == -1) {
             System.out.printf("ERROR: resume with %s is not found\n", resume.getUuid());
         } else {
-            storage[findIndex(resume.getUuid())] = resume;
+            storage[index] = resume;
             System.out.println("Update success");
         }
     }
