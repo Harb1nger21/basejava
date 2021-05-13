@@ -13,27 +13,18 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    public void clear() {
-
-    }
-
-    @Override
-    public void update(Resume r) {
-
-    }
-
-    @Override
-    public void save(Resume r) {
-
-    }
-
-    @Override
-    public void delete(String uuid) {
-
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    public void save(Resume resume) {
+        int index = findIndex(resume.getUuid()) * (-1) - 1;
+        if (index == 0) {
+            System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
+        } else if (countElements == storage.length) {
+            System.out.println("ERROR: ArrayStorage is already has 10000 resume");
+        } else if (storage[index] != null) {
+            System.arraycopy(storage, index, storage, index + 1, countElements + 1);
+            storage[index] = resume;
+        } else {
+            storage[index] = resume;
+            countElements++;
+        }
     }
 }
