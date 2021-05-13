@@ -14,15 +14,14 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     public void save(Resume resume) {
-        int index = findIndex(resume.getUuid()) * (-1) - 1;
-        if (index == 0) {
+        int index = findIndex(resume.getUuid());
+        if (index > 0) {
             System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
         } else if (countElements == storage.length) {
             System.out.println("ERROR: ArrayStorage is already has 10000 resume");
-        } else if (storage[index] != null) {
-            System.arraycopy(storage, index, storage, index + 1, countElements + 1);
-            storage[index] = resume;
-        } else {
+        } else if (index < 0) {
+            index = index * (-1) - 1;
+            System.arraycopy(storage, index, storage, index + 1, countElements);
             storage[index] = resume;
             countElements++;
         }
