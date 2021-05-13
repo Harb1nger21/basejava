@@ -1,6 +1,4 @@
-package com.urise.webapp.model;
-
-import java.util.Objects;
+package ru.javawebinar.basejava.model;
 
 /**
  * Initial resume class

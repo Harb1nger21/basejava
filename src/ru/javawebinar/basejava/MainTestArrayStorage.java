@@ -1,5 +1,7 @@
-import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.SortedArrayStorage;
+package ru.javawebinar.basejava;
+
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.SortedArrayStorage;
 
 /**
  * Test for your com.urise.webapp.storage.ArrayStorage implementation
