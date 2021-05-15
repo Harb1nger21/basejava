@@ -7,14 +7,14 @@ import java.util.Arrays;
 public abstract class AbstractArrayStorage implements Storage {
     protected static final int STORAGE_LIMIT = 10000;
 
-    protected Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countElements = 0;
 
-    public int size() {
+    public final int size() {
         return countElements;
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
             return storage[index];
@@ -23,16 +23,16 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
-    public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, countElements, null);
         countElements = 0;
     }
 
-    public Resume[] getAll() {
+    public final Resume[] getAll() {
         return Arrays.copyOf(storage, countElements);
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = findIndex(uuid);
 
         if (index == -1) {
@@ -43,7 +43,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         int index = findIndex(resume.getUuid());
 
         if (index == -1) {
@@ -53,6 +53,9 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Update success");
         }
     }
+
+    public abstract void save(Resume resume);
+
 
     protected abstract int findIndex(String uuid);
 }
