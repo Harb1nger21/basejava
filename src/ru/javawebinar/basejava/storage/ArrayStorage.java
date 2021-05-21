@@ -6,18 +6,8 @@ import ru.javawebinar.basejava.model.Resume;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
-    public void save(Resume resume) {
-        if (findIndex(resume.getUuid()) != -1) {
-            System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
-        } else if (countElements == storage.length) {
-            System.out.println("ERROR: ArrayStorage is already has 10000 resume");
-        } else {
-            storage[countElements] = resume;
-            countElements++;
-        }
-    }
 
-    protected void add(Resume resume){
+    protected void add(Resume resume, int index){
         storage[countElements] = resume;
     }
 
