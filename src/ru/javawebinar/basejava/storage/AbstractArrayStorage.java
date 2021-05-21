@@ -54,8 +54,18 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public abstract void save(Resume resume);
+    public void save(Resume resume, int index) {
+        if (index > -1) {
+            System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
+        } else if (countElements == storage.length) {
+            System.out.println("ERROR: ArrayStorage is already has 10000 resume");
+        }else{
+            add(resume);
+            countElements++;
+        }
+    }
 
+    protected abstract void add(Resume resume);
 
     protected abstract int findIndex(String uuid);
 }

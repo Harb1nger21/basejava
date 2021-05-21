@@ -12,6 +12,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         return Arrays.binarySearch(storage, 0, countElements, searchKey);
     }
 
+    protected void add(Resume resume){
+        int index = findIndex(resume.getUuid()) * (-1) - 1;
+        System.arraycopy(storage, index, storage, index + 1, countElements);
+        storage[index] = resume;
+    }
+
     @Override
     public void save(Resume resume) {
         int index = findIndex(resume.getUuid());
