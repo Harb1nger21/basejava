@@ -10,11 +10,11 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countElements = 0;
 
-    public final int size() {
+    public int size() {
         return countElements;
     }
 
-    public final Resume get(String uuid) {
+    public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
             return storage[index];
@@ -23,27 +23,27 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
-    public final void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, countElements, null);
         countElements = 0;
     }
 
-    public final Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, countElements);
     }
 
-    public final void delete(String uuid) {
+    public void delete(String uuid) {
         int index = findIndex(uuid);
 
         if (index == -1) {
             System.out.printf("ERROR: resume with %s is not found\n", uuid);
-        } else if (countElements - index >= 0) {
-            System.arraycopy(storage, index + 1, storage, index, countElements - index);
-            countElements--;
+        } else if (countElements - 1 - index >= 0) {
+            System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         }
+        countElements--;
     }
 
-    public final void update(Resume resume) {
+    public void update(Resume resume) {
         int index = findIndex(resume.getUuid());
 
         if (index == -1) {
@@ -60,12 +60,13 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
         } else if (countElements == storage.length) {
             System.out.println("ERROR: ArrayStorage is already has 10000 resume");
-        }else{
+        } else {
             add(resume, index);
             countElements++;
         }
     }
 
     protected abstract void add(Resume resume, int index);
+
     protected abstract int findIndex(String uuid);
 }
