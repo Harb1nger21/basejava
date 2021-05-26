@@ -10,11 +10,11 @@ public abstract class AbstractArrayStorage implements Storage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countElements = 0;
 
-    public int size() {
+    public final int size() {
         return countElements;
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
             return storage[index];
@@ -23,16 +23,16 @@ public abstract class AbstractArrayStorage implements Storage {
         return null;
     }
 
-    public void clear() {
+    public final void clear() {
         Arrays.fill(storage, 0, countElements, null);
         countElements = 0;
     }
 
-    public Resume[] getAll() {
+    public final Resume[] getAll() {
         return Arrays.copyOf(storage, countElements);
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = findIndex(uuid);
 
         if (index == -1) {
@@ -43,7 +43,7 @@ public abstract class AbstractArrayStorage implements Storage {
         countElements--;
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         int index = findIndex(resume.getUuid());
 
         if (index == -1) {
@@ -54,7 +54,7 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void save(Resume resume) {
+    public final void save(Resume resume) {
         int index = findIndex(resume.getUuid());
         if (index > -1) {
             System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
