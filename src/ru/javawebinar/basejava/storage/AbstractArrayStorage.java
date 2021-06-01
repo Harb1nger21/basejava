@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exeption.ExistStorageException;
+import ru.javawebinar.basejava.exeption.NotExistStorageException;
+import ru.javawebinar.basejava.exeption.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -19,8 +22,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index != -1) {
             return storage[index];
         }
-        System.out.printf("ERROR: resume with %s is not found\n", uuid);
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
     public final void clear() {
@@ -36,7 +38,7 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(uuid);
 
         if (index == -1) {
-            System.out.printf("ERROR: resume with %s is not found\n", uuid);
+            throw new NotExistStorageException(uuid);
         } else if (countElements - 1 - index >= 0) {
             System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         }
@@ -47,7 +49,7 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(resume.getUuid());
 
         if (index == -1) {
-            System.out.printf("ERROR: resume with %s is not found\n", resume.getUuid());
+            throw new NotExistStorageException(resume.getUuid());
         } else {
             storage[index] = resume;
             System.out.println("Update success");
@@ -57,9 +59,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void save(Resume resume) {
         int index = findIndex(resume.getUuid());
         if (index > -1) {
-            System.out.printf("ERROR: resume with %s is already in\n", resume.getUuid());
+            throw new ExistStorageException(resume.getUuid());
         } else if (countElements == storage.length) {
-            System.out.println("ERROR: ArrayStorage is already has 10000 resume");
+            throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         } else {
             add(resume, index);
             countElements++;
