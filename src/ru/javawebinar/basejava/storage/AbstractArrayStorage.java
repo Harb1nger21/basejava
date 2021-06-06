@@ -39,9 +39,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
         if (index == -1) {
             throw new NotExistStorageException(uuid);
-        } else if (countElements - 1 - index >= 0) {
-            System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         }
+        System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         countElements--;
     }
 
@@ -50,10 +49,9 @@ public abstract class AbstractArrayStorage implements Storage {
 
         if (index == -1) {
             throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-            System.out.println("Update success");
         }
+        storage[index] = resume;
+        System.out.println("Update success");
     }
 
     public final void save(Resume resume) {
@@ -62,10 +60,9 @@ public abstract class AbstractArrayStorage implements Storage {
             throw new ExistStorageException(resume.getUuid());
         } else if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
-        } else {
-            add(resume, index);
-            countElements++;
         }
+        add(resume, index);
+        countElements++;
     }
 
     protected abstract void add(Resume resume, int index);
