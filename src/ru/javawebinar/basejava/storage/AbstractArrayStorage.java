@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void delete(String uuid) {
         int index = findIndex(uuid);
 
-        if (index == -1) {
+        if (index <= -1) {
             throw new NotExistStorageException(uuid);
         }
         System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
@@ -47,7 +47,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void update(Resume resume) {
         int index = findIndex(resume.getUuid());
 
-        if (index == -1) {
+        if (index <= -1) {
             throw new NotExistStorageException(resume.getUuid());
         }
         storage[index] = resume;
@@ -58,7 +58,8 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = findIndex(resume.getUuid());
         if (index > -1) {
             throw new ExistStorageException(resume.getUuid());
-        } else if (countElements == storage.length) {
+        }
+        if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
         add(resume, index);
