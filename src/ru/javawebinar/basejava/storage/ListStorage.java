@@ -9,36 +9,10 @@ import java.util.List;
 public class ListStorage extends AbstractStorage {
     private List<Resume> storage = new ArrayList<>();
 
-    @Override
     public void clear() {
         storage.clear();
     }
 
-    @Override
-    public void update(Resume resume) {
-        checkNotExistStorageException(resume.getUuid());
-        storage.set(findIndex(resume.getUuid()), resume);
-    }
-
-    @Override
-    public void save(Resume resume) {
-        checkExistStorageException(resume);
-        storage.add(resume);
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        checkNotExistStorageException(uuid);
-        return storage.get(findIndex(uuid));
-    }
-
-    @Override
-    public void delete(String uuid) {
-        checkNotExistStorageException(uuid);
-        storage.remove(findIndex(uuid));
-    }
-
-    @Override
     public Resume[] getAll() {
         Resume[] allResume = new Resume[storage.size()];
         Iterator<Resume> iterator = storage.iterator();
@@ -48,7 +22,6 @@ public class ListStorage extends AbstractStorage {
         return allResume;
     }
 
-    @Override
     public int size() {
         return storage.size();
     }
@@ -56,5 +29,25 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected int findIndex(String uuid) {
         return storage.indexOf(new Resume(uuid));
+    }
+
+    @Override
+    protected void changeStorage(Resume resume) {
+        storage.set(findIndex(resume.getUuid()), resume);
+    }
+
+    @Override
+    protected void saveIn(Resume resume) {
+        storage.add(resume);
+    }
+
+    @Override
+    protected Resume getOut(String uuid) {
+        return storage.get(findIndex(uuid));
+    }
+
+    @Override
+    protected void deleteResume(String uuid) {
+        storage.remove(findIndex(uuid));
     }
 }
