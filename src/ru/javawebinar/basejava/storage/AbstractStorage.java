@@ -8,10 +8,8 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        if (findIndex(resume.getUuid()) <= -1) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        changeStorage(resume);
+        getNotExistStorageException(resume.getUuid());
+        changeStorage(resume, findIndex(resume.getUuid()));
     }
 
     @Override
@@ -19,35 +17,35 @@ public abstract class AbstractStorage implements Storage {
         if (findIndex(resume.getUuid()) > -1) {
             throw new ExistStorageException(resume.getUuid());
         }
-        saveIn(resume);
+        saveIn(resume, findIndex(resume.getUuid()));
     }
 
     @Override
     public Resume get(String uuid) {
-        if (findIndex(uuid) <= -1) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getOut(uuid);
+        getNotExistStorageException(uuid);
+        return getOut(uuid, findIndex(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index <= -1) {
+        getNotExistStorageException(uuid);
+        deleteResume(uuid, findIndex(uuid));
+    }
+
+    private void getNotExistStorageException(String uuid) {
+        if (findIndex(uuid) <= -1) {
             throw new NotExistStorageException(uuid);
         }
-
-        deleteResume(uuid);
     }
 
     protected abstract int findIndex(String uuid);
 
-    protected abstract void changeStorage(Resume resume);
+    protected abstract void changeStorage(Resume resume, int index);
 
-    protected abstract void saveIn(Resume resume);
+    protected abstract void saveIn(Resume resume, int index);
 
-    protected abstract Resume getOut(String uuid);
+    protected abstract Resume getOut(String uuid, int index);
 
-    protected abstract void deleteResume(String uuid);
+    protected abstract void deleteResume(String uuid, int index);
 
 }

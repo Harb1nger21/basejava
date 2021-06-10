@@ -3,7 +3,6 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -14,12 +13,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     public Resume[] getAll() {
-        Resume[] allResume = new Resume[storage.size()];
-        Iterator<Resume> iterator = storage.iterator();
-        for (int i = 0; i < allResume.length; i++) {
-            allResume[i] = iterator.next();
-        }
-        return allResume;
+        return storage.toArray(new Resume[0]);
     }
 
     public int size() {
@@ -32,22 +26,22 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void changeStorage(Resume resume) {
-        storage.set(findIndex(resume.getUuid()), resume);
+    protected void changeStorage(Resume resume, int index) {
+        storage.set(index, resume);
     }
 
     @Override
-    protected void saveIn(Resume resume) {
+    protected void saveIn(Resume resume, int index) {
         storage.add(resume);
     }
 
     @Override
-    protected Resume getOut(String uuid) {
-        return storage.get(findIndex(uuid));
+    protected Resume getOut(String uuid, int index) {
+        return storage.get(index);
     }
 
     @Override
-    protected void deleteResume(String uuid) {
-        storage.remove(findIndex(uuid));
+    protected void deleteResume(String uuid, int index) {
+        storage.remove(index);
     }
 }
