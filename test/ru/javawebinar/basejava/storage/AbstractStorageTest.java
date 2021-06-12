@@ -7,12 +7,12 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    private final Storage storage;
+    protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -49,6 +49,7 @@ public class AbstractStorageTest {
     @Test
     public void getAllTest() {
         Resume[] testStorage = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        Resume[] some = storage.getAll();
         Assert.assertArrayEquals(testStorage, storage.getAll());
     }
 
@@ -86,9 +87,4 @@ public class AbstractStorageTest {
     public void saveAlreadyExistTest() {
         storage.save(new Resume(UUID_1));
     }
-
-    protected Storage getStorage() {
-        return storage;
-    }
-
 }

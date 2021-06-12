@@ -13,14 +13,14 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
     @Test(expected = StorageException.class)
     public void getStorageExceptionTest() {
-        getStorage().clear();
+        storage.clear();
         try {
             for (int i = 0; i < 10000; i++) {
-                getStorage().save(new Resume("uuid" + i));
+                storage.save(new Resume("uuid" + i));
             }
         } catch (StorageException ignored) {
             Assert.fail("Переполнение произошло раньше времени");
         }
-        getStorage().save(new Resume("uuid20000"));
+        storage.save(new Resume("uuid20000"));
     }
 }
