@@ -22,13 +22,11 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected int findIndex(String uuid) {
-        if(storage.containsKey(uuid)){
-            return 0;
-        }
-        return -1;
+        return storage.containsKey(uuid) ? 0 : -1;
     }
 
     @Override
+
     protected void changeStorage(Resume resume, int index) {
         saveIn(resume,index);
     }
