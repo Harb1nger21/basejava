@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.LinkedHashMap;
@@ -21,28 +23,41 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected int findIndex(String uuid) {
-        return storage.containsKey(uuid) ? 0 : -1;
+    protected Object findElement(String uuid) {
+        return storage.containsKey(uuid) ? null : uuid;
     }
 
     @Override
-
-    protected void changeStorage(Resume resume, int index) {
-        saveIn(resume,index);
+    protected void changeStorage(Resume resume, Object element) {
+        saveIn(resume, element);
     }
 
     @Override
-    protected void saveIn(Resume resume, int index) {
-        storage.put(resume.getUuid(), resume);
+    protected void saveIn(Resume resume, Object element) {
+        storage.put((String) element, resume);
     }
 
     @Override
-    protected Resume getOut(String uuid, int index) {
+    protected Resume getOut(String uuid, Object element) {
         return storage.get(uuid);
     }
 
     @Override
-    protected void deleteResume(String uuid, int index) {
+    protected void deleteResume(String uuid, Object element) {
         storage.remove(uuid);
+    }
+
+    @Override
+    protected void existElementInStorage(Object element, String uuid) {
+        if (element == null) {
+            throw new ExistStorageException(uuid);
+        }
+    }
+
+    @Override
+    protected void notExistElementInStorage(Object element, String uuid){
+        if (element != null) {
+            throw new NotExistStorageException(uuid);
+        }
     }
 }
