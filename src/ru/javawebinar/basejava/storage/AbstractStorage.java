@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
@@ -12,7 +14,15 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void save(Resume resume) {
         Object element = findElement(resume.getUuid());
-        existElementInStorage(element, resume.getUuid());
+        if (isInteger(element)) {
+            if ((int) element > -1) {
+                throw new ExistStorageException(resume.getUuid());
+            }
+        } else {
+            if (element == null) {
+                throw new ExistStorageException(resume.getUuid());
+            }
+        }
         saveIn(resume, element);
     }
 
@@ -28,8 +38,25 @@ public abstract class AbstractStorage implements Storage {
 
     private Object getElementIfResumeExist(String uuid) {
         Object element = findElement(uuid);
-        notExistElementInStorage(element, uuid);
+        if (isInteger(element)) {
+            if ((int) element <= -1) {
+                throw new NotExistStorageException(uuid);
+            }
+        } else {
+            if (element != null) {
+                throw new NotExistStorageException(uuid);
+            }
+        }
         return element;
+    }
+
+    private boolean isInteger(Object element) {
+        try {
+            int index = (int) element;
+            return true;
+        } catch (ClassCastException | NullPointerException e) {
+            return false;
+        }
     }
 
     protected abstract Object findElement(String uuid);
@@ -41,8 +68,4 @@ public abstract class AbstractStorage implements Storage {
     protected abstract Resume getOut(String uuid, Object element);
 
     protected abstract void deleteResume(String uuid, Object element);
-
-    protected abstract void existElementInStorage(Object element, String uuid);
-
-    protected abstract void notExistElementInStorage(Object element, String uuid);
 }

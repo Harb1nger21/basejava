@@ -46,18 +46,4 @@ public class MapStorage extends AbstractStorage {
     protected void deleteResume(String uuid, Object element) {
         storage.remove(uuid);
     }
-
-    @Override
-    protected void existElementInStorage(Object element, String uuid) {
-        if (element == null) {
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    protected void notExistElementInStorage(Object element, String uuid){
-        if (element != null) {
-            throw new NotExistStorageException(uuid);
-        }
-    }
 }

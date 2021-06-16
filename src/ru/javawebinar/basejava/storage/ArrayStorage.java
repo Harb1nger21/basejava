@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 /**
@@ -22,19 +20,5 @@ public class ArrayStorage extends AbstractArrayStorage {
             }
         }
         return -1;
-    }
-
-    @Override
-    protected void existElementInStorage(Object element, String uuid) {
-        if((int)element > -1){
-            throw new ExistStorageException(uuid);
-        }
-    }
-
-    @Override
-    protected void notExistElementInStorage(Object element, String uuid) {
-        if((int)element <= -1){
-            throw new NotExistStorageException(uuid);
-        }
     }
 }

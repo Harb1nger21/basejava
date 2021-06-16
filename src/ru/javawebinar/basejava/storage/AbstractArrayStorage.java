@@ -25,26 +25,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected void changeStorage(Resume resume, Object index) {
-        storage[(int)index] = resume;
+        storage[(int) index] = resume;
     }
 
     @Override
-    protected void saveIn(Resume resume, Object element) {
+    protected void saveIn(Resume resume, Object index) {
         if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
-        add(resume, (int)element);
+        add(resume, (int) index);
         countElements++;
     }
 
     @Override
     protected Resume getOut(String uuid, Object element) {
-        return storage[(int)element];
+        return storage[(int) element];
     }
 
     @Override
     protected void deleteResume(String uuid, Object element) {
-        int index = (int)element;
+        int index = (int) element;
         System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         countElements--;
     }
