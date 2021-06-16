@@ -8,64 +8,45 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        changeStorage(resume, getElementIfResumeExist(resume.getUuid()));
+        changeStorage(resume, getKeyIfResumeExist(resume.getUuid()));
     }
 
     @Override
     public void save(Resume resume) {
-        Object element = findElement(resume.getUuid());
-        if (isInteger(element)) {
-            if ((int) element > -1) {
-                throw new ExistStorageException(resume.getUuid());
-            }
-        } else {
-            if (element == null) {
-                throw new ExistStorageException(resume.getUuid());
-            }
+        Object element = findKey(resume.getUuid());
+        if (isExist(element)) {
+            throw new ExistStorageException(resume.getUuid());
         }
         saveIn(resume, element);
     }
 
     @Override
     public Resume get(String uuid) {
-        return getOut(uuid, getElementIfResumeExist(uuid));
+        return getOut(getKeyIfResumeExist(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-        deleteResume(uuid, getElementIfResumeExist(uuid));
+        deleteResume(getKeyIfResumeExist(uuid));
     }
 
-    private Object getElementIfResumeExist(String uuid) {
-        Object element = findElement(uuid);
-        if (isInteger(element)) {
-            if ((int) element <= -1) {
-                throw new NotExistStorageException(uuid);
-            }
-        } else {
-            if (element != null) {
-                throw new NotExistStorageException(uuid);
-            }
+    private Object getKeyIfResumeExist(String uuid) {
+        Object key = findKey(uuid);
+        if (!isExist(key)) {
+            throw new NotExistStorageException(uuid);
         }
-        return element;
+        return key;
     }
 
-    private boolean isInteger(Object element) {
-        try {
-            int index = (int) element;
-            return true;
-        } catch (ClassCastException | NullPointerException e) {
-            return false;
-        }
-    }
-
-    protected abstract Object findElement(String uuid);
+    protected abstract Object findKey(String uuid);
 
     protected abstract void changeStorage(Resume resume, Object element);
 
     protected abstract void saveIn(Resume resume, Object element);
 
-    protected abstract Resume getOut(String uuid, Object element);
+    protected abstract Resume getOut(Object element);
 
-    protected abstract void deleteResume(String uuid, Object element);
+    protected abstract void deleteResume(Object element);
+
+    protected abstract boolean isExist(Object element);
 }
