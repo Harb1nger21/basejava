@@ -26,7 +26,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void changeStorage(Resume resume, Object key) {
+    protected void doUpdate(Resume resume, Object key) {
         saveIn(resume, key);
     }
 
