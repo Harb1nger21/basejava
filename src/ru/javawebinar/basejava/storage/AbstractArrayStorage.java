@@ -43,8 +43,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteResume(Object element) {
-        int index = (int) element;
+    protected void deleteResume(Object key) {
+        int index = (int) key;
         System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         countElements--;
     }

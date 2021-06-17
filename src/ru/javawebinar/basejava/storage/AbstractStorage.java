@@ -13,11 +13,11 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        Object element = findKey(resume.getUuid());
-        if (isExist(element)) {
+        Object key = findKey(resume.getUuid());
+        if (isExist(key)) {
             throw new ExistStorageException(resume.getUuid());
         }
-        saveIn(resume, element);
+        saveIn(resume, key);
     }
 
     @Override
@@ -40,13 +40,13 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Object findKey(String uuid);
 
-    protected abstract void changeStorage(Resume resume, Object element);
+    protected abstract void changeStorage(Resume resume, Object key);
 
-    protected abstract void saveIn(Resume resume, Object element);
+    protected abstract void saveIn(Resume resume, Object key);
 
-    protected abstract Resume getOut(Object element);
+    protected abstract Resume getOut(Object key);
 
-    protected abstract void deleteResume(Object element);
+    protected abstract void deleteResume(Object key);
 
-    protected abstract boolean isExist(Object element);
+    protected abstract boolean isExist(Object key);
 }
