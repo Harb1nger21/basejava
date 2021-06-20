@@ -12,8 +12,11 @@ public class ListStorage extends AbstractStorage {
         storage.clear();
     }
 
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> sortedList = storage;
+        sortedList.sort(Resume::compareTo);
+        return sortedList;
     }
 
     public int size() {
