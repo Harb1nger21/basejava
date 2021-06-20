@@ -22,11 +22,17 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        return storage.indexOf(new Resume(uuid));
+        int index = -1;
+        for (Resume r : storage) {
+            if (r.getUuid().equals(uuid)) {
+                index = storage.indexOf(r);
+            }
+        }
+        return index;
     }
 
     @Override
-    protected void changeStorage(Resume resume, Object index) {
+    protected void doUpdate(Resume resume, Object index) {
         storage.set((int) index, resume);
     }
 

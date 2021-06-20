@@ -8,7 +8,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        changeStorage(resume, getKeyIfResumeExist(resume.getUuid()));
+        doUpdate(resume, getKeyIfResumeExist(resume.getUuid()));
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Object findKey(String uuid);
 
-    protected abstract void changeStorage(Resume resume, Object key);
+    protected abstract void doUpdate(Resume resume, Object key);
 
     protected abstract void saveIn(Resume resume, Object key);
 
