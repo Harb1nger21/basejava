@@ -2,16 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Map;
-
 public class MapResumeStorage extends AbstractMapStorage {
     @Override
     protected Object findKey(String uuid) {
-        for (Map.Entry<String, Resume> kv : storage.entrySet()) {
-            Resume value = kv.getValue();
-            if (value.getUuid().equals(uuid)) {
-                return value;
-            }
+        if(storage.containsKey(uuid)){
+            return storage.get(uuid);
         }
         return null;
     }

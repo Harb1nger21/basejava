@@ -15,14 +15,10 @@ public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_4 = "uuid4";
-    private static final String FULL_NAME_1 = "Вика Красивая";
-    private static final String FULL_NAME_2 = "Антон Сладкий";
-    private static final String FULL_NAME_3 = "Катя Хитрая";
-    private static final String FULL_NAME_4 = "Рома Вредный";
-    private static final Resume RESUME_1 = new Resume(FULL_NAME_1);
-    private static final Resume RESUME_2 = new Resume(FULL_NAME_2);
-    private static final Resume RESUME_3 = new Resume(FULL_NAME_3);
-    private static final Resume RESUME_4 = new Resume(FULL_NAME_4);
+    private static final Resume RESUME_1 = new Resume("Вика Красивая");
+    private static final Resume RESUME_2 = new Resume("Антон Сладкий");
+    private static final Resume RESUME_3 = new Resume("Катя Хитрая");
+    private static final Resume RESUME_4 = new Resume("Рома Вредный");
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {
@@ -59,7 +55,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllTest() {
-        List<Resume> expectedResumes = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        List<Resume> expectedResumes = Arrays.asList(RESUME_2, RESUME_1, RESUME_3);
         assertEquals(expectedResumes, storage.getAllSorted());
     }
 

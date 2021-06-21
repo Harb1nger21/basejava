@@ -18,13 +18,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        int index = -1;
-        for (Resume r : storage) {
-            if (r.getUuid().equals(uuid)) {
-                index = storage.indexOf(r);
+        for(int i = 0; i < storage.size(); i++){
+            if(storage.get(i).getUuid().equals(uuid)){
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     @Override
