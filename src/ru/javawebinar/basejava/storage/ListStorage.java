@@ -12,13 +12,6 @@ public class ListStorage extends AbstractStorage {
         storage.clear();
     }
 
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> sortedList = storage;
-        sortedList.sort(Resume::compareTo);
-        return sortedList;
-    }
-
     public int size() {
         return storage.size();
     }
@@ -57,5 +50,10 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object index) {
         return (int) index != -1;
+    }
+
+    @Override
+    protected List<Resume> convertToList() {
+        return storage;
     }
 }

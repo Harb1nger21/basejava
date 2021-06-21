@@ -3,9 +3,7 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
@@ -16,12 +14,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public final void clear() {
         Arrays.fill(storage, 0, countElements, null);
         countElements = 0;
-    }
-
-    public final List<Resume> getAllSorted() {
-        List<Resume> sortedList = Arrays.asList(Arrays.copyOf(storage, countElements));
-        sortedList.sort(Resume::compareTo);
-        return sortedList;
     }
 
     public final int size() {
@@ -57,6 +49,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object index) {
         return (int) index > -1;
+    }
+
+    @Override
+    protected List<Resume> convertToList() {
+        return Arrays.asList(Arrays.copyOf(storage, countElements));
     }
 
     protected abstract void add(Resume resume, int index);
