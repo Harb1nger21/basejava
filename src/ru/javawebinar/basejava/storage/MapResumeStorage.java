@@ -5,10 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 public class MapResumeStorage extends AbstractMapStorage {
     @Override
     protected Object findKey(String uuid) {
-        if(storage.containsKey(uuid)){
-            return storage.get(uuid);
-        }
-        return null;
+        return storage.get(uuid);
     }
 
     @Override
