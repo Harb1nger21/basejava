@@ -10,15 +10,14 @@ public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private String uuid;
-    private String fullName;
+    private final String fullName;
 
     public Resume() {
         this(UUID.randomUUID().toString());
     }
 
     public Resume(String fullName) {
-        this.fullName = fullName;
-
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
@@ -30,17 +29,13 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public String toString() {
         return uuid;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     @Override
@@ -57,8 +52,13 @@ public class Resume implements Comparable<Resume> {
         return Objects.hash(uuid, fullName);
     }
 
+
     @Override
-    public int compareTo(Resume o) {
-        return uuid.compareTo(o.uuid);
+    public int compareTo(Resume resume) {
+        int result = fullName.compareTo(resume.fullName);
+        if (result == 0) {
+            result = uuid.compareTo(resume.uuid);
+        }
+        return result;
     }
 }

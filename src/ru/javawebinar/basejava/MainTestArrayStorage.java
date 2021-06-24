@@ -30,21 +30,21 @@ public class MainTestArrayStorage {
 
        // System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
-        printAll();
+        //printAll();
      //   ARRAY_STORAGE.delete(r1.getUuid());
-        printAll();
+        //printAll();
         ARRAY_STORAGE.update(r4);
-        printAll();
+        //printAll();
         ARRAY_STORAGE.clear();
-        printAll();
+        //printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
     }
 
-    static void printAll() {
-        System.out.println("\nGet All");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
-            System.out.println(r);
-        }
-    }
+//    static void printAll() {
+//        System.out.println("\nGet All");
+//        for (Resume r : ARRAY_STORAGE.getAll()) {
+//            System.out.println(r);
+//        }
+//    }
 }

@@ -12,23 +12,18 @@ public class ListStorage extends AbstractStorage {
         storage.clear();
     }
 
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
-    }
-
     public int size() {
         return storage.size();
     }
 
     @Override
     protected Object findKey(String uuid) {
-        int index = -1;
-        for (Resume r : storage) {
-            if (r.getUuid().equals(uuid)) {
-                index = storage.indexOf(r);
+        for(int i = 0; i < storage.size(); i++){
+            if(storage.get(i).getUuid().equals(uuid)){
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     @Override
@@ -54,5 +49,10 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object index) {
         return (int) index != -1;
+    }
+
+    @Override
+    protected List<Resume> convertToList() {
+        return storage;
     }
 }

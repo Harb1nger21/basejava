@@ -31,7 +31,7 @@ public class MainArray {
             }
             switch (params[0]) {
                 case "list":
-                    printAll();
+                    //printAll();
                     break;
                 case "size":
                     System.out.println(ARRAY_STORAGE.size());
@@ -39,23 +39,23 @@ public class MainArray {
                 case "save":
                     r = new Resume(uuid);
                     ARRAY_STORAGE.save(r);
-                    printAll();
+                    //printAll();
                     break;
                 case "update":
                     r = new Resume(uuid);
                     ARRAY_STORAGE.update(r);
-                    printAll();
+                    //printAll();
                     break;
                 case "delete":
  //                   ARRAY_STORAGE.delete(uuid);
-                    printAll();
+                    //printAll();
                     break;
                 case "get":
                 //    System.out.println(ARRAY_STORAGE.get(uuid));
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
-                    printAll();
+                    //printAll();
                     break;
                 case "exit":
                     return;
@@ -66,16 +66,16 @@ public class MainArray {
         }
     }
 
-    static void printAll() {
-        Resume[] all = ARRAY_STORAGE.getAll();
-        System.out.println("----------------------------");
-        if (all.length == 0) {
-            System.out.println("Empty");
-        } else {
-            for (Resume r : all) {
-                System.out.println(r);
-            }
-        }
-        System.out.println("----------------------------");
-    }
+//    static void printAll() {
+//        Resume[] all = ARRAY_STORAGE.getAll();
+//        System.out.println("----------------------------");
+//        if (all.length == 0) {
+//            System.out.println("Empty");
+//        } else {
+//            for (Resume r : all) {
+//                System.out.println(r);
+//            }
+//        }
+//        System.out.println("----------------------------");
+//    }
 }
