@@ -7,8 +7,8 @@ import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
-    protected Object findKey(String uuid) {
-        Resume searchKey = new Resume();
+    protected Integer findKey(String uuid) {
+        Resume searchKey = new Resume("tempName");
         searchKey.setUuid(uuid);
         Comparator<Resume> comparator = Comparator.comparing(Resume::getUuid);
         return Arrays.binarySearch(storage, 0, countElements, searchKey, comparator);

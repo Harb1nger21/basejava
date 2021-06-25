@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractMapStorage extends AbstractStorage {
+public abstract class AbstractMapStorage<SearchKey> extends AbstractStorage<Object> {
     protected Map<String, Resume> storage = new LinkedHashMap<>();
 
     public void clear() {

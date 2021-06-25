@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
     private static final Resume RESUME_1 = new Resume("Вика Красивая");
     private static final Resume RESUME_2 = new Resume("Антон Сладкий");
@@ -27,6 +28,10 @@ public abstract class AbstractStorageTest {
 
     @Before
     public void setUp() {
+        RESUME_1.setUuid(UUID_1);
+        RESUME_2.setUuid(UUID_2);
+        RESUME_3.setUuid(UUID_3);
+        RESUME_4.setUuid(UUID_4);
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -39,7 +44,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getTest() {
-        assertEquals(RESUME_1, storage.get(RESUME_1.getUuid()));
+        assertEquals(RESUME_1, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -61,7 +66,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void deleteTest() {
-        storage.delete(RESUME_1.getUuid());
+        storage.delete(UUID_1);
         assertEquals(Arrays.asList(RESUME_2, RESUME_3), storage.getAllSorted());
         assertEquals(2, storage.size());
     }
@@ -73,9 +78,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateTest() {
-        Resume expectedResume = new Resume(RESUME_2.getUuid(), "что-то новое");
+        Resume expectedResume = new Resume(UUID_2, "что-то новое");
         storage.update(expectedResume);
-        assertEquals(expectedResume, storage.get(RESUME_2.getUuid()));
+        assertEquals(expectedResume, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -86,7 +91,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void saveTest() {
         storage.save(RESUME_4);
-        assertEquals(RESUME_4, storage.get(RESUME_4.getUuid()));
+        assertEquals(RESUME_4, storage.get(UUID_4));
         assertEquals(4, storage.size());
     }
 
