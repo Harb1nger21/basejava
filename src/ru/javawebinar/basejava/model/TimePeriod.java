@@ -1,21 +1,29 @@
 package ru.javawebinar.basejava.model;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 public class TimePeriod {
-    private final LocalDate start;
-    private final LocalDate finish;
+    private final YearMonth start;
+    private final YearMonth finish;
 
-    public TimePeriod(LocalDate start, LocalDate finish) {
+    public TimePeriod(YearMonth start, YearMonth finish) {
         this.start = start;
         this.finish = finish;
     }
 
-    public LocalDate getStart() {
+    public YearMonth getStart() {
         return start;
     }
 
-    public LocalDate getFinish() {
+    public YearMonth getFinish() {
         return finish;
+    }
+
+    @Override
+    public String toString() {
+        return "TimePeriod{" +
+                "start=" + start +
+                ", finish=" + finish +
+                '}';
     }
 }

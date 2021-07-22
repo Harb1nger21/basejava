@@ -9,4 +9,11 @@ public class ContactList {
     public List<String> getContacts() {
         return contacts;
     }
+
+    @Override
+    public String toString() {
+        return "ContactList{" +
+                "contacts=" + contacts +
+                '}';
+    }
 }

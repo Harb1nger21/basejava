@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Section<Type> {
+public abstract class AbstractSection<Type> {
     protected Type information;
 
     public Type getInformation() {
@@ -16,20 +16,28 @@ public abstract class Section<Type> {
         this.information = information;
     }
 
+    @Override
+    public String toString() {
 
-    public static class TextSection extends Section<String> {
+        return  "{" +
+                "information=" + information +
+                '}';
+    }
+
+
+    public static class TextSection extends AbstractSection<String> {
         public TextSection() {
             information = "";
         }
     }
 
-    public static class ListSection extends Section<List<String>> {
+    public static class ListSection extends AbstractSection<List<String>> {
         public ListSection() {
             information = new ArrayList<>();
         }
     }
 
-    public static class MapSection extends Section<Map<TimePeriod, Knowledge>> {
+    public static class MapSection extends AbstractSection<Map<TimePeriod, Knowledge>> {
         public MapSection() {
             information = new HashMap<>();
         }

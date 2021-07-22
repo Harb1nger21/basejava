@@ -16,4 +16,12 @@ public class Knowledge {
     public String getPractice() {
         return practice;
     }
+
+    @Override
+    public String toString() {
+        return "Knowledge{" +
+                "organization='" + organization + '\'' +
+                ", practice='" + practice + '\'' +
+                '}';
+    }
 }
