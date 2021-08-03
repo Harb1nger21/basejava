@@ -1,9 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractSection<Type> {
     protected Type information;
@@ -22,6 +19,19 @@ public abstract class AbstractSection<Type> {
         return  "{" +
                 "information=" + information +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSection<?> that = (AbstractSection<?>) o;
+        return Objects.equals(information, that.information);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(information);
     }
 
 
