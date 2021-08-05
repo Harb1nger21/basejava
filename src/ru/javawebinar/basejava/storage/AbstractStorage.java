@@ -13,18 +13,18 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
     @Override
     public void update(Resume resume) {
         LOGGER.info("Update " + resume);
-        doUpdate(resume, getKeyIfResumeExist(resume.getUuid()));
+        updateResume(resume, getKeyIfResumeExist(resume.getUuid()));
     }
 
     @Override
     public void save(Resume resume) {
         LOGGER.info("Save " + resume);
         SearchKey key = getKeyIfResumeNotExist(resume.getUuid());
-        saveIn(resume, key);
+        saveResume(resume, key);
     }
 
     @Override
-    public Resume get(String uuid) {
+    public Resume get(String uuid){
         LOGGER.info("Get " + uuid);
         return getOut(getKeyIfResumeExist(uuid));
     }
@@ -38,7 +38,7 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOGGER.info("GetAllSorted");
-        List<Resume> sortedList = convertToList();
+        List<Resume> sortedList = getAsList();
         sortedList.sort(Resume::compareTo);
         return sortedList;
     }
@@ -61,13 +61,13 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
         return key;
     }
 
-    protected abstract List<Resume> convertToList();
+    protected abstract List<Resume> getAsList();
 
     protected abstract SearchKey findKey(String uuid);
 
-    protected abstract void doUpdate(Resume resume, SearchKey key);
+    protected abstract void updateResume(Resume resume, SearchKey key);
 
-    protected abstract void saveIn(Resume resume, SearchKey key);
+    protected abstract void saveResume(Resume resume, SearchKey key);
 
     protected abstract Resume getOut(SearchKey key);
 

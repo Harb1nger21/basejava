@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.model;
+package ru.javawebinar.basejava.util;
 
 import java.time.YearMonth;
 import java.util.Objects;

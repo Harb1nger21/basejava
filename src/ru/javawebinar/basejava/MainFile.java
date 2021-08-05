@@ -5,26 +5,29 @@ import java.io.IOException;
 
 public class MainFile {
 
-    public static void FilesList(File file) {
+    public static void filesList(File file) {
         if (file.isDirectory()) {
             System.out.println("\n" + file.getName() + " package");
             File[] files = file.listFiles();
+            assert files != null;
             for (File fileName : files) {
-                FilesList(fileName);
+                filesList(fileName);
             }
         } else {
-            System.out.println(file.getName() + " file");
+            String name = file.getName();
+            file.delete();
+            System.out.println(name + " file");
         }
     }
 
     public static void main(String[] args) throws IOException {
-        File file = new File("C:\\Users\\Victoriya\\Desktop\\Программирование\\java\\topjava\\basejava\\src\\ru\\javawebinar");
+        File file = new File(".\\src\\ru\\javawebinar");
         System.out.println(file.getCanonicalPath());
 
         File dir = new File(".\\src\\ru\\javawebinar\\basejava");
         System.out.println((file.isDirectory()));
         System.out.println(dir.getName());
 
-        FilesList(dir);
+        filesList(dir);
     }
 }

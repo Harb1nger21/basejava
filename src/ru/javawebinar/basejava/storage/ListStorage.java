@@ -27,12 +27,12 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void doUpdate(Resume resume, Integer index) {
+    protected void updateResume(Resume resume, Integer index) {
         storage.set(index, resume);
     }
 
     @Override
-    protected void saveIn(Resume resume, Integer index) {
+    protected void saveResume(Resume resume, Integer index) {
         storage.add(resume);
     }
 
@@ -52,7 +52,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected List<Resume> convertToList() {
+    protected List<Resume> getAsList() {
         return storage;
     }
 }

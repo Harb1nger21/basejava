@@ -21,12 +21,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected void doUpdate(Resume resume, Integer index) {
+    protected void updateResume(Resume resume, Integer index) {
         storage[index] = resume;
     }
 
     @Override
-    protected void saveIn(Resume resume, Integer index) {
+    protected void saveResume(Resume resume, Integer index) {
         if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
@@ -51,7 +51,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected List<Resume> convertToList() {
+    protected List<Resume> getAsList() {
         return Arrays.asList(Arrays.copyOf(storage, countElements));
     }
 

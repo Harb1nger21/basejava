@@ -14,11 +14,10 @@ public class Resume implements Comparable<Resume> {
     private final Map<SectionType, AbstractSection> sectionsMap = new HashMap<>();
 
     public Resume(String fullName) {
-
         this(UUID.randomUUID().toString(), fullName);
     }
-    public Resume(String uuid, String fullName) {
 
+    public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid must not be null");
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
@@ -78,10 +77,7 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume resume) {
-        int result = fullName.compareTo(resume.fullName);
-        if (result == 0) {
-            result = uuid.compareTo(resume.uuid);
-        }
-        return result;
+        final int fullNameCompare = fullName.compareTo(resume.fullName);
+        return fullNameCompare != 0 ? fullNameCompare : uuid.compareTo(resume.uuid);
     }
 }

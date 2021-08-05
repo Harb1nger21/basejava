@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.TimePeriod;
+
 import java.util.*;
 
 public abstract class AbstractSection<Type> {
