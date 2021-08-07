@@ -37,7 +37,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected Resume getOut(Integer index) {
+    protected Resume getResume(Integer index) {
         return storage.get(index);
     }
 

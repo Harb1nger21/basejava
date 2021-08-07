@@ -9,7 +9,7 @@ public class MapUuidStorage extends AbstractMapStorage {
     }
 
     @Override
-    protected Resume getOut(Object key) {
+    protected Resume getResume(Object key) {
         return storage.get((String) key);
     }
 
