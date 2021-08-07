@@ -16,7 +16,7 @@ public class MainFile {
         } else {
             String name = file.getName();
             file.delete();
-            System.out.println(name + " file");
+            System.out.println("    " + name + " file");
         }
     }
 

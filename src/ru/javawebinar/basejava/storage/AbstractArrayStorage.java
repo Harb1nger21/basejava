@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
-        add(resume,index);
+        add(resume, index);
         countElements++;
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected boolean isExist(Integer index) {
-        return  index > -1;
+        return index > -1;
     }
 
     @Override

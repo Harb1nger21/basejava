@@ -10,7 +10,7 @@ public class MapResumeStorage extends AbstractMapStorage {
 
     @Override
     protected Resume getOut(Object key) {
-        return (Resume)key;
+        return (Resume) key;
     }
 
     @Override

@@ -16,7 +16,7 @@ public abstract class AbstractSection<Type> {
     @Override
     public String toString() {
 
-        return  "{" +
+        return "{" +
                 "information=" + information +
                 '}';
     }

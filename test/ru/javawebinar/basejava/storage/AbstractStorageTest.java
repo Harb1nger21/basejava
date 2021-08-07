@@ -18,11 +18,11 @@ public abstract class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
     private static final String UUID_5 = "uuid5";
-    private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1,"Вика Красивая");
-    private static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2,"Антон Сладкий");
-    private static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3,"Катя Хитрая");
+    private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Вика Красивая");
+    private static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Антон Сладкий");
+    private static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3, "Катя Хитрая");
     private static final Resume RESUME_4 = ResumeTestData.createResume(UUID_4, "Григорий Кислин");
-    private static final Resume RESUME_5 = ResumeTestData.createResume(UUID_5,"Рома Вредный");
+    private static final Resume RESUME_5 = ResumeTestData.createResume(UUID_5, "Рома Вредный");
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {

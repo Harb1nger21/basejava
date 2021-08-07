@@ -18,8 +18,8 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected Integer findKey(String uuid) {
-        for(int i = 0; i < storage.size(); i++){
-            if(storage.get(i).getUuid().equals(uuid)){
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
             }
         }
@@ -43,7 +43,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected void deleteResume(Integer index) {
-        storage.remove((int)index);
+        storage.remove((int) index);
     }
 
     @Override

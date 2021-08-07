@@ -44,11 +44,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateResume(Resume resume, File file) {
         File[] listFiles = directory.listFiles();
-        for(int i = 1; i < Objects.requireNonNull(listFiles).length; i++){
-            if(listFiles[i].equals(file)){
+        for (int i = 1; i < Objects.requireNonNull(listFiles).length; i++) {
+            if (listFiles[i].equals(file)) {
                 try {
                     listFiles[i] = convertToFile(resume);
-                }catch (IOException e){
+                } catch (IOException e) {
                     throw new StorageException("IO error", file.getName(), e);
                 }
             }
@@ -83,8 +83,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void deleteResume(File resume) {
         File[] listFiles = directory.listFiles();
-        for(int i = 1; i < Objects.requireNonNull(listFiles).length; i++){
-            if(listFiles[i].equals(resume)){
+        for (int i = 1; i < Objects.requireNonNull(listFiles).length; i++) {
+            if (listFiles[i].equals(resume)) {
                 listFiles[i].delete();
             }
         }
@@ -100,10 +100,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getAsList() {
         File[] listFiles = directory.listFiles();
         List<Resume> resumes = new ArrayList<>();
-        for(int i = 1; i < Objects.requireNonNull(listFiles).length; i++){
+        for (int i = 1; i < Objects.requireNonNull(listFiles).length; i++) {
             try {
                 resumes.add(convertToResume(listFiles[i]));
-            }catch (IOException e){
+            } catch (IOException e) {
                 throw new StorageException("IO error", listFiles[i].getName(), e);
             }
         }
@@ -113,5 +113,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected abstract void writeResume(Resume resume, File file) throws IOException;
 
     protected abstract Resume convertToResume(File file) throws IOException;
+
     protected abstract File convertToFile(Resume resume) throws IOException;
 }
