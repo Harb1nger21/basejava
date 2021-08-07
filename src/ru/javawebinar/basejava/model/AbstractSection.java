@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.model;
 
-import ru.javawebinar.basejava.util.TimePeriod;
-
 import java.util.*;
 
 public abstract class AbstractSection<Type> {
@@ -34,24 +32,5 @@ public abstract class AbstractSection<Type> {
     @Override
     public int hashCode() {
         return Objects.hash(information);
-    }
-
-
-    public static class TextSection extends AbstractSection<String> {
-        public TextSection() {
-            information = "";
-        }
-    }
-
-    public static class ListSection extends AbstractSection<List<String>> {
-        public ListSection() {
-            information = new ArrayList<>();
-        }
-    }
-
-    public static class MapSection extends AbstractSection<Map<TimePeriod, Knowledge>> {
-        public MapSection() {
-            information = new HashMap<>();
-        }
     }
 }

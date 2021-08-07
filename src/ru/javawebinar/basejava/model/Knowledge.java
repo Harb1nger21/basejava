@@ -3,17 +3,27 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 
 public class Knowledge {
-    private final String organization;
+    private final Organization organization;
     private final String practice;
+    private String position;
 
-    public Knowledge(String organization, String practice) {
+    public Knowledge(Organization organization, String practice, String position) {
+        Objects.requireNonNull(organization, "organization must not be null");
+        Objects.requireNonNull(practice, "practice must not be null");
+        Objects.requireNonNull(practice, "practice must not be null");
+        this.organization = organization;
+        this.practice = practice;
+        this.position = position;
+    }
+
+    public Knowledge(Organization organization, String practice) {
         Objects.requireNonNull(organization, "organization must not be null");
         Objects.requireNonNull(practice, "practice must not be null");
         this.organization = organization;
         this.practice = practice;
     }
 
-    public String getOrganization() {
+    public Organization getOrganization() {
         return organization;
     }
 
@@ -21,12 +31,8 @@ public class Knowledge {
         return practice;
     }
 
-    @Override
-    public String toString() {
-        return "Knowledge{" +
-                "organization='" + organization + '\'' +
-                ", practice='" + practice + '\'' +
-                '}';
+    public String getPosition() {
+        return position;
     }
 
     @Override
@@ -35,11 +41,12 @@ public class Knowledge {
         if (o == null || getClass() != o.getClass()) return false;
         Knowledge knowledge = (Knowledge) o;
         return organization.equals(knowledge.organization) &&
-                practice.equals(knowledge.practice);
+                practice.equals(knowledge.practice) &&
+                position.equals(knowledge.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(organization, practice);
+        return Objects.hash(organization, practice, position);
     }
 }

@@ -25,12 +25,12 @@ public class Resume implements Comparable<Resume> {
         contactMap.put(ContactType.PHONE, new ContactList());
         contactMap.put(ContactType.SOCIAL, new ContactList());
         contactMap.put(ContactType.EMAIL, new ContactList());
-        sectionsMap.put(SectionType.PERSONAL, new AbstractSection.TextSection());
-        sectionsMap.put(SectionType.OBJECTIVE, new AbstractSection.TextSection());
-        sectionsMap.put(SectionType.ACHIEVEMENT, new AbstractSection.ListSection());
-        sectionsMap.put(SectionType.QUALIFICATIONS, new AbstractSection.ListSection());
-        sectionsMap.put(SectionType.EXPERIENCE, new AbstractSection.MapSection());
-        sectionsMap.put(SectionType.EDUCATION, new AbstractSection.MapSection());
+        sectionsMap.put(SectionType.PERSONAL, new TextSection());
+        sectionsMap.put(SectionType.OBJECTIVE, new TextSection());
+        sectionsMap.put(SectionType.ACHIEVEMENT, new ListSection());
+        sectionsMap.put(SectionType.QUALIFICATIONS, new ListSection());
+        sectionsMap.put(SectionType.EXPERIENCE, new MapSection());
+        sectionsMap.put(SectionType.EDUCATION, new MapSection());
     }
 
     public String getUuid() {
