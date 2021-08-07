@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int countElements = 0;
@@ -21,38 +21,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Resume resume, Object index) {
-        storage[(int) index] = resume;
+    protected void updateResume(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
     @Override
-    protected void saveIn(Resume resume, Object index) {
+    protected void saveResume(Resume resume, Integer index) {
         if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
-        add(resume, (int) index);
+        add(resume,index);
         countElements++;
     }
 
     @Override
-    protected Resume getOut(Object index) {
-        return storage[(int) index];
+    protected Resume getOut(Integer index) {
+        return storage[index];
     }
 
     @Override
-    protected void deleteResume(Object key) {
-        int index = (int) key;
+    protected void deleteResume(Integer index) {
         System.arraycopy(storage, index + 1, storage, index, countElements - 1 - index);
         countElements--;
     }
 
     @Override
-    protected boolean isExist(Object index) {
-        return (int) index > -1;
+    protected boolean isExist(Integer index) {
+        return  index > -1;
     }
 
     @Override
-    protected List<Resume> convertToList() {
+    protected List<Resume> getAsList() {
         return Arrays.asList(Arrays.copyOf(storage, countElements));
     }
 

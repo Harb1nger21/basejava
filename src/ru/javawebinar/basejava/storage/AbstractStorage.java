@@ -5,64 +5,73 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SearchKey> implements Storage {
+    private static final Logger LOGGER = Logger.getLogger(AbstractStorage.class.getName());
 
     @Override
     public void update(Resume resume) {
-        doUpdate(resume, getKeyIfResumeExist(resume.getUuid()));
+        LOGGER.info("Update " + resume);
+        updateResume(resume, getKeyIfResumeExist(resume.getUuid()));
     }
 
     @Override
     public void save(Resume resume) {
-        Object key = getKeyIfResumeNotExist(resume.getUuid());
-        saveIn(resume, key);
+        LOGGER.info("Save " + resume);
+        SearchKey key = getKeyIfResumeNotExist(resume.getUuid());
+        saveResume(resume, key);
     }
 
     @Override
-    public Resume get(String uuid) {
+    public Resume get(String uuid){
+        LOGGER.info("Get " + uuid);
         return getOut(getKeyIfResumeExist(uuid));
     }
 
     @Override
     public void delete(String uuid) {
+        LOGGER.info("Delete " + uuid);
         deleteResume(getKeyIfResumeExist(uuid));
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> sortedList = convertToList();
+        LOGGER.info("GetAllSorted");
+        List<Resume> sortedList = getAsList();
         sortedList.sort(Resume::compareTo);
         return sortedList;
     }
 
-    private Object getKeyIfResumeExist(String uuid) {
-        Object key = findKey(uuid);
+    private SearchKey getKeyIfResumeExist(String uuid) {
+        SearchKey key = findKey(uuid);
         if (!isExist(key)) {
+            LOGGER.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return key;
     }
 
-    private Object getKeyIfResumeNotExist(String uuid) {
-        Object key = findKey(uuid);
+    private SearchKey getKeyIfResumeNotExist(String uuid) {
+        SearchKey key = findKey(uuid);
         if (isExist(key)) {
+            LOGGER.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return key;
     }
 
-    protected abstract List<Resume> convertToList();
+    protected abstract List<Resume> getAsList();
 
-    protected abstract Object findKey(String uuid);
+    protected abstract SearchKey findKey(String uuid);
 
-    protected abstract void doUpdate(Resume resume, Object key);
+    protected abstract void updateResume(Resume resume, SearchKey key);
 
-    protected abstract void saveIn(Resume resume, Object key);
+    protected abstract void saveResume(Resume resume, SearchKey key);
 
-    protected abstract Resume getOut(Object key);
+    protected abstract Resume getOut(SearchKey key);
 
-    protected abstract void deleteResume(Object key);
+    protected abstract void deleteResume(SearchKey key);
 
-    protected abstract boolean isExist(Object key);
+    protected abstract boolean isExist(SearchKey key);
 }

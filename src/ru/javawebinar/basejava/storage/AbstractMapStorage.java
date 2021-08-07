@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractMapStorage extends AbstractStorage {
+public abstract class AbstractMapStorage extends AbstractStorage<Object> {
     protected Map<String, Resume> storage = new LinkedHashMap<>();
 
     public void clear() {
@@ -19,12 +19,12 @@ public abstract class AbstractMapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doUpdate(Resume resume, Object key) {
-        saveIn(resume, key);
+    protected void updateResume(Resume resume, Object key) {
+        saveResume(resume, key);
     }
 
     @Override
-    protected void saveIn(Resume resume, Object key) {
+    protected void saveResume(Resume resume, Object key) {
         storage.put(resume.getUuid(), resume);
     }
 
@@ -34,7 +34,7 @@ public abstract class AbstractMapStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> convertToList() {
+    protected List<Resume> getAsList() {
         return Arrays.asList((storage.values()).toArray(new Resume[0]));
     }
 }
