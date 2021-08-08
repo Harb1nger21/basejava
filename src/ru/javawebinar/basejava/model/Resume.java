@@ -8,10 +8,12 @@ import java.util.*;
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private String uuid;
+    private final String uuid;
+
     private final String fullName;
-    private final Map<ContactType, ContactList> contactMap = new HashMap<>();
-    private final Map<SectionType, AbstractSection> sectionsMap = new HashMap<>();
+
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -22,62 +24,55 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-        contactMap.put(ContactType.PHONE, new ContactList());
-        contactMap.put(ContactType.SOCIAL, new ContactList());
-        contactMap.put(ContactType.EMAIL, new ContactList());
-        sectionsMap.put(SectionType.PERSONAL, new TextSection());
-        sectionsMap.put(SectionType.OBJECTIVE, new TextSection());
-        sectionsMap.put(SectionType.ACHIEVEMENT, new ListSection());
-        sectionsMap.put(SectionType.QUALIFICATIONS, new ListSection());
-        sectionsMap.put(SectionType.EXPERIENCE, new MapSection());
-        sectionsMap.put(SectionType.EDUCATION, new MapSection());
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public String getContact(ContactType type) {
+        return contacts.get(type);
     }
 
-    public Map<SectionType, AbstractSection> getSectionsMap() {
-        return sectionsMap;
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
     }
 
-    public Map<ContactType, ContactList> getContactMap() {
-        return contactMap;
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
     }
 
-    @Override
-    public String toString() {
-        return "Resume{" +
-                "uuid='" + uuid + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", contactMap=" + contactMap +
-                ", sectionsMap=" + sectionsMap +
-                '}';
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) &&
-                fullName.equals(resume.fullName) &&
-                Objects.equals(contactMap, resume.contactMap) &&
-                Objects.equals(sectionsMap, resume.sectionsMap);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName, contactMap, sectionsMap);
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
-    public int compareTo(Resume resume) {
-        final int fullNameCompare = fullName.compareTo(resume.fullName);
-        return fullNameCompare != 0 ? fullNameCompare : uuid.compareTo(resume.uuid);
+    public String toString() {
+        return uuid + '(' + fullName + ')';
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }
