@@ -1,8 +1,9 @@
-package ru.javawebinar.basejava.storage;
+package ru.javawebinar.basejava.storage.abstractClass;
 
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.List;
 import java.util.logging.Logger;

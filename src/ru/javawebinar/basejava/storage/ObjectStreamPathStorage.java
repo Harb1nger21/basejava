@@ -2,10 +2,11 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.abstractClass.AbstractPathStorage;
 
 import java.io.*;
 
-public class ObjectStreamPathStorage extends AbstractPathStorage {
+public class ObjectStreamPathStorage extends AbstractPathStorage implements Strategy {
     protected ObjectStreamPathStorage(String dir) {
         super(dir);
     }
