@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.abstractClass.AbstractStorage;
+import ru.javawebinar.basejava.storage.strategy.Strategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -27,21 +28,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                deleteResume(file);
-            }
+        File[] filesList = getFilesList();
+        for (File file : filesList) {
+            deleteResume(file);
         }
     }
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        return list.length;
+        return getFilesList().length;
     }
 
     @Override
@@ -91,14 +86,19 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getAsList() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new StorageException("Directory read error", null);
-        }
+        File[] files = getFilesList();
         List<Resume> list = new ArrayList<>(files.length);
         for (File file : files) {
             list.add(getResume(file));
         }
         return list;
+    }
+
+    private File[] getFilesList() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory read error", null);
+        }
+        return files;
     }
 }

@@ -11,6 +11,17 @@ public class MainFile {
     private static int depth = 0;
     private final static String INDENTATION = "    ";
 
+    public static void main(String[] args) throws IOException {
+        File file = new File(".\\src\\ru\\javawebinar");
+        System.out.println(file.getCanonicalPath());
+
+        File dir = new File(".\\src\\ru\\javawebinar\\basejava");
+        System.out.println((file.isDirectory()));
+        System.out.println(dir.getName());
+
+        filesList(dir);
+    }
+
     public static void filesList(File file) {
         if (file.isDirectory()) {
             System.out.println(INDENTATION.repeat(depth++) + file.getName() + " package");
@@ -28,16 +39,5 @@ public class MainFile {
         } else {
             System.out.println(INDENTATION.repeat(depth) + file.getName() + " file");
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        File file = new File(".\\src\\ru\\javawebinar");
-        System.out.println(file.getCanonicalPath());
-
-        File dir = new File(".\\src\\ru\\javawebinar\\basejava");
-        System.out.println((file.isDirectory()));
-        System.out.println(dir.getName());
-
-        filesList(dir);
     }
 }
