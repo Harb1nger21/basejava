@@ -12,15 +12,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
-    private final Path directory;
+    private final Path path;
     private final Strategy strategy;
 
     protected PathStorage(Strategy strategy, String dir) {
-        directory = Paths.get(dir);
-        Objects.requireNonNull(directory, "directory must not be null");
-        if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
+        path = Paths.get(dir);
+        Objects.requireNonNull(path, "directory must not be null");
+        if (!Files.isDirectory(path) || !Files.isWritable(path)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
         this.strategy = strategy;
@@ -28,27 +29,17 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteResume);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getAsStream(path).forEach(this::deleteResume);
     }
 
     @Override
     public int size() {
-        int size;
-        try {
-             size = (int)Files.list(directory).count();
-        }catch(IOException e){
-            throw new StorageException("Directory read error", null);
-        }
-        return size;
+        return (int) getAsStream(path).count();
     }
 
     @Override
     protected Path findKey(String uuid) {
-        return directory.resolve(uuid);
+        return path.resolve(uuid);
     }
 
     @Override
@@ -86,24 +77,25 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void deleteResume(Path path) {
-        try{
+        try {
             Files.delete(path);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new StorageException("File delete error", path.getFileName().toString());
         }
     }
 
     @Override
     protected List<Resume> getAsList() {
-        List<Resume> list = new ArrayList<>();
-        try{
-            Files.list(directory).forEach(
-                    path -> list.add(getResume(path))
-            );
-        }
-        catch (IOException e){
+        return getAsStream(path).map(this::getResume).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    }
+
+    private Stream<Path> getAsStream(Path path) {
+        Stream<Path> stream;
+        try {
+            stream = Files.list(path);
+        } catch (IOException e) {
             throw new StorageException("Directory read error", null);
         }
-        return list;
+        return stream;
     }
 }
