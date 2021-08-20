@@ -8,5 +8,6 @@ import java.io.OutputStream;
 
 public interface Strategy {
     void writeResume(Resume r, OutputStream os) throws IOException;
+
     Resume readResume(InputStream is) throws IOException;
 }
