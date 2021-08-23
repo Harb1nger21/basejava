@@ -9,9 +9,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
@@ -19,12 +19,12 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Strategy strategy;
 
     protected PathStorage(Strategy strategy, String dir) {
+        Objects.requireNonNull(dir, "directory must not be null");
         path = Paths.get(dir);
-        Objects.requireNonNull(path, "directory must not be null");
+        this.strategy = strategy;
         if (!Files.isDirectory(path) || !Files.isWritable(path)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
-        this.strategy = strategy;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected boolean isExist(Path path) {
-        return path.toFile().exists();
+        return Files.isRegularFile(path);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file " + path.toAbsolutePath().toString(), path.getFileName().toString(), e);
+            throw new StorageException("Couldn't create path " + path, getFileName(path), e);
         }
         updateResume(resume, path);
     }
@@ -71,7 +71,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return strategy.readResume(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("File read error", path.getFileName().toString(), e);
+            throw new StorageException("Path read error", getFileName(path), e);
         }
     }
 
@@ -80,13 +80,13 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("File delete error", path.getFileName().toString());
+            throw new StorageException("Path delete error", getFileName(path));
         }
     }
 
     @Override
     protected List<Resume> getAsList() {
-        return getAsStream(path).map(this::getResume).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        return getAsStream(path).map(this::getResume).collect(Collectors.toList());
     }
 
     private Stream<Path> getAsStream(Path path) {
@@ -94,8 +94,12 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             stream = Files.list(path);
         } catch (IOException e) {
-            throw new StorageException("Directory read error", null);
+            throw new StorageException("Directory read error");
         }
         return stream;
+    }
+
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
     }
 }
