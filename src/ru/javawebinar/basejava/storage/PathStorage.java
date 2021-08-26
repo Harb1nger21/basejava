@@ -29,12 +29,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        getAsStream(path).forEach(this::deleteResume);
+        getAsStream().forEach(this::deleteResume);
     }
 
     @Override
     public int size() {
-        return (int) getAsStream(path).count();
+        return (int) getAsStream().count();
     }
 
     @Override
@@ -80,23 +80,21 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", getFileName(path));
+            throw new StorageException("Path delete error", getFileName(path), e);
         }
     }
 
     @Override
     protected List<Resume> getAsList() {
-        return getAsStream(path).map(this::getResume).collect(Collectors.toList());
+        return getAsStream().map(this::getResume).collect(Collectors.toList());
     }
 
-    private Stream<Path> getAsStream(Path path) {
-        Stream<Path> stream;
+    private Stream<Path> getAsStream() {
         try {
-            stream = Files.list(path);
+            return Files.list(path);
         } catch (IOException e) {
-            throw new StorageException("Directory read error");
+            throw new StorageException("Directory read error", e);
         }
-        return stream;
     }
 
     private String getFileName(Path path) {
