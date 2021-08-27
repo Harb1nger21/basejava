@@ -8,7 +8,6 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateTest() {
-        Resume expectedResume = new Resume(UUID_2, "что-то новое");
+        Resume expectedResume = ResumeTestData.createResume(UUID_2, "что-то новое");
         storage.update(expectedResume);
         assertEquals(expectedResume, storage.get(UUID_2));
     }
