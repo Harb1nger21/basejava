@@ -4,7 +4,6 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,33 +27,29 @@ public class DataStrategy implements Strategy {
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
 
-                final String title = entry.getKey().getTitle();
-                dos.writeUTF(title);
-                switch (title) {
-                    case "Личные качества", "Позиция" -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
-                    case "Достижения", "Квалификация" -> {
+                SectionType type = entry.getKey();
+                dos.writeUTF(type.name());
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> sectionList = ((ListSection) entry.getValue()).getItems();
                         dos.writeInt(sectionList.size());
                         for (String item : sectionList) {
                             dos.writeUTF(item);
                         }
                     }
-                    case "Опыт работы", "Образование" -> {
+                    case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizationList = ((OrganizationSection) entry.getValue()).getOrganizations();
                         dos.writeInt(organizationList.size());
                         for (Organization organization : organizationList) {
-                            dos.writeUTF(organization.getHomePage().getName());
-                            String url = organization.getHomePage().getUrl();
-                            dos.writeUTF(Objects.requireNonNullElse(url, "null"));
+                            Link link = organization.getHomePage();
+                            dos.writeUTF(link.getName());
+                            dos.writeUTF(Objects.requireNonNullElse(link.getUrl(), "null"));
                             List<Organization.Position> positions = organization.getPositions();
                             dos.writeInt(positions.size());
                             for (Organization.Position position : positions) {
-                                LocalDate start = position.getStartDate();
-                                LocalDate end = position.getEndDate();
-                                dos.writeInt(start.getYear());
-                                dos.writeInt(start.getMonthValue());
-                                dos.writeInt(end.getYear());
-                                dos.writeInt(end.getMonthValue());
+                                writeDate(dos, position.getStartDate());
+                                writeDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
                                 String description = position.getDescription();
                                 dos.writeUTF(Objects.requireNonNullElse(description, "null"));
@@ -79,22 +74,22 @@ public class DataStrategy implements Strategy {
             for (int i = 0; i < sectionCount; i++) {
                 String title = dis.readUTF();
                 switch (title) {
-                    case "Личные качества", "Позиция" -> resume.addSection(getType(title), new TextSection(dis.readUTF()));
-                    case "Достижения", "Квалификация" -> {
-                        int achievCount = dis.readInt();
+                    case "PERSONAL", "OBJECTIVE" -> resume.addSection(SectionType.valueOf(title), new TextSection(dis.readUTF()));
+                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
+                        int listSecCount = dis.readInt();
                         List<String> achievList = new ArrayList<>();
-                        for (int j = 0; j < achievCount; j++) {
+                        for (int j = 0; j < listSecCount; j++) {
                             achievList.add(dis.readUTF());
                         }
-                        resume.addSection(getType(title), new ListSection(achievList));
+                        resume.addSection(SectionType.valueOf(title), new ListSection(achievList));
                     }
-                    case "Опыт работы", "Образование" -> {
+                    case "EXPERIENCE", "EDUCATION" -> {
                         int orgCount = dis.readInt();
                         List<Organization> orglist = new ArrayList<>();
                         for (int k = 0; k < orgCount; k++) {
-                            Organization organization = new Organization(new Link(dis.readUTF(), notNull(dis.readUTF())), readPositions(dis));
+                            Organization organization = new Organization(new Link(dis.readUTF(), exist(dis.readUTF())), readPositions(dis));
                             orglist.add(organization);
-                            resume.addSection(getType(title), new OrganizationSection(orglist));
+                            resume.addSection(SectionType.valueOf(title), new OrganizationSection(orglist));
                         }
                     }
                 }
@@ -103,16 +98,16 @@ public class DataStrategy implements Strategy {
         }
     }
 
-    private SectionType getType(String string) {
-        return switch (string) {
-            case "Личные качества" -> SectionType.PERSONAL;
-            case "Позиция" -> SectionType.OBJECTIVE;
-            case "Достижения" -> SectionType.ACHIEVEMENT;
-            case "Квалификация" -> SectionType.QUALIFICATIONS;
-            case "Опыт работы" -> SectionType.EXPERIENCE;
-            case "Образование" -> SectionType.EDUCATION;
-            default -> null;
-        };
+    private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
+        dos.writeInt(date.getYear());
+        dos.writeInt(date.getMonthValue());
+    }
+
+    private String exist(String string) {
+        if (!string.equals("null")) {
+            return string;
+        }
+        return null;
     }
 
     private List<Organization.Position> readPositions(DataInputStream dis) throws IOException {
@@ -120,21 +115,16 @@ public class DataStrategy implements Strategy {
         int positionCount = dis.readInt();
         for (int i = 0; i < positionCount; i++) {
             Organization.Position position = new Organization.Position(
-                    dis.readInt(),
-                    Month.of(dis.readInt()),
-                    dis.readInt(),
-                    Month.of(dis.readInt()),
+                    readDate(dis),
+                    readDate(dis),
                     dis.readUTF(),
-                    notNull(dis.readUTF()));
+                    exist(dis.readUTF()));
             positions.add(position);
         }
         return positions;
     }
 
-    private String notNull(String string) {
-        if (string.equals("null")) {
-            return null;
-        }
-        return string;
+    private LocalDate readDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(),dis.readInt(),1);
     }
 }
