@@ -1,10 +1,8 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.util.DateUtil;
 
 import java.time.Month;
-import java.time.YearMonth;
 import java.util.*;
 
 public class ResumeTestData {
@@ -49,7 +47,7 @@ public class ResumeTestData {
                 )));
         newResume.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
-                        new Organization("Java Online Projects", "",
+                        new Organization("Java Online Projects", null,
                                 new Organization.Position(2013, Month.OCTOBER, "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
                         new Organization("Wrike", "",
                                 new Organization.Position(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.")),
@@ -64,7 +62,7 @@ public class ResumeTestData {
                         new Organization("Siemens AG", "",
                                 new Organization.Position(2005, Month.JANUARY, 2007, Month.FEBRUARY, "Разработчик ПО", "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).")),
                         new Organization("Alcatel", "",
-                                new Organization.Position(1997, Month.SEPTEMBER, 2005, Month.JANUARY, "Инженер по аппаратному и программному тестированию", "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."))
+                                new Organization.Position(1997, Month.SEPTEMBER, 2005, Month.JANUARY, "Инженер по аппаратному и программному тестированию", null))
                 )
         );
 
@@ -82,7 +80,7 @@ public class ResumeTestData {
                                 new Organization.Position(1993, Month.SEPTEMBER, 1996, Month.JULY, "aspirant", "Аспирантура (программист С, С++)"),
                                 new Organization.Position(1987, Month.SEPTEMBER, 1993, Month.JULY, "student", "Инженер (программист Fortran, C)")),
                         new Organization("Заочная физико-техническая школа при МФТИ", "",
-                                new Organization.Position(1984, Month.SEPTEMBER, 1987, Month.JUNE, "student", "Закончил с отличием"))
+                                new Organization.Position(1984, Month.SEPTEMBER, 1987, Month.JUNE, "student", null))
                 ));
 
         return newResume;
