@@ -1,13 +1,12 @@
 package ru.javawebinar.basejava.storage.strategy;
 
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.CollectionConsumer;
+
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DataStrategy implements Strategy {
     @Override
@@ -18,46 +17,100 @@ public class DataStrategy implements Strategy {
 
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            forEachWithIOException(contacts.entrySet(), contact -> {
+                dos.writeUTF(contact.getKey().name());
+                dos.writeUTF(contact.getValue());
+            });
+
+//            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+//                dos.writeUTF(entry.getKey().name());
+//                dos.writeUTF(entry.getValue());
+//            }
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
 
-                SectionType type = entry.getKey();
+            forEachWithIOException(sections.entrySet(), section -> {
+                SectionType type = section.getKey();
                 dos.writeUTF(type.name());
                 switch (type) {
-                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
+                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) section.getValue()).getContent());
                     case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> sectionList = ((ListSection) entry.getValue()).getItems();
+                        List<String> sectionList = ((ListSection) section.getValue()).getItems();
                         dos.writeInt(sectionList.size());
-                        for (String item : sectionList) {
-                            dos.writeUTF(item);
-                        }
+                        forEachWithIOException(sectionList, dos::writeUTF);
+//                        for (String item : sectionList) {
+//                            dos.writeUTF(item);
+//                        }
                     }
                     case EXPERIENCE, EDUCATION -> {
-                        List<Organization> organizationList = ((OrganizationSection) entry.getValue()).getOrganizations();
+                        List<Organization> organizationList = ((OrganizationSection) section.getValue()).getOrganizations();
                         dos.writeInt(organizationList.size());
-                        for (Organization organization : organizationList) {
+                        forEachWithIOException(organizationList, organization -> {
                             Link link = organization.getHomePage();
                             dos.writeUTF(link.getName());
                             dos.writeUTF(Objects.requireNonNullElse(link.getUrl(), "null"));
                             List<Organization.Position> positions = organization.getPositions();
                             dos.writeInt(positions.size());
-                            for (Organization.Position position : positions) {
+                            forEachWithIOException(positions, position -> {
                                 writeDate(dos, position.getStartDate());
                                 writeDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
                                 String description = position.getDescription();
                                 dos.writeUTF(Objects.requireNonNullElse(description, "null"));
-                            }
-                        }
+                            });
+                        });
+//                        for (Organization organization : organizationList) {
+//                            Link link = organization.getHomePage();
+//                            dos.writeUTF(link.getName());
+//                            dos.writeUTF(Objects.requireNonNullElse(link.getUrl(), "null"));
+//                            List<Organization.Position> positions = organization.getPositions();
+//                            dos.writeInt(positions.size());
+//                            for (Organization.Position position : positions) {
+//                                writeDate(dos, position.getStartDate());
+//                                writeDate(dos, position.getEndDate());
+//                                dos.writeUTF(position.getTitle());
+//                                String description = position.getDescription();
+//                                dos.writeUTF(Objects.requireNonNullElse(description, "null"));
+//                            }
+//                        }
                     }
                 }
-            }
+            });
+
+//            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+//
+//                SectionType type = entry.getKey();
+//                dos.writeUTF(type.name());
+//                switch (type) {
+//                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
+//                    case ACHIEVEMENT, QUALIFICATIONS -> {
+//                        List<String> sectionList = ((ListSection) entry.getValue()).getItems();
+//                        dos.writeInt(sectionList.size());
+//                        for (String item : sectionList) {
+//                            dos.writeUTF(item);
+//                        }
+//                    }
+//                    case EXPERIENCE, EDUCATION -> {
+//                        List<Organization> organizationList = ((OrganizationSection) entry.getValue()).getOrganizations();
+//                        dos.writeInt(organizationList.size());
+//                        for (Organization organization : organizationList) {
+//                            Link link = organization.getHomePage();
+//                            dos.writeUTF(link.getName());
+//                            dos.writeUTF(Objects.requireNonNullElse(link.getUrl(), "null"));
+//                            List<Organization.Position> positions = organization.getPositions();
+//                            dos.writeInt(positions.size());
+//                            for (Organization.Position position : positions) {
+//                                writeDate(dos, position.getStartDate());
+//                                writeDate(dos, position.getEndDate());
+//                                dos.writeUTF(position.getTitle());
+//                                String description = position.getDescription();
+//                                dos.writeUTF(Objects.requireNonNullElse(description, "null"));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -72,24 +125,24 @@ public class DataStrategy implements Strategy {
 
             int sectionCount = dis.readInt();
             for (int i = 0; i < sectionCount; i++) {
-                String title = dis.readUTF();
+                SectionType title = SectionType.valueOf(dis.readUTF());
                 switch (title) {
-                    case "PERSONAL", "OBJECTIVE" -> resume.addSection(SectionType.valueOf(title), new TextSection(dis.readUTF()));
-                    case "ACHIEVEMENT", "QUALIFICATIONS" -> {
+                    case PERSONAL, OBJECTIVE -> resume.addSection(title, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
                         int listSecCount = dis.readInt();
                         List<String> achievList = new ArrayList<>();
                         for (int j = 0; j < listSecCount; j++) {
                             achievList.add(dis.readUTF());
                         }
-                        resume.addSection(SectionType.valueOf(title), new ListSection(achievList));
+                        resume.addSection(title, new ListSection(achievList));
                     }
-                    case "EXPERIENCE", "EDUCATION" -> {
+                    case EXPERIENCE, EDUCATION -> {
                         int orgCount = dis.readInt();
                         List<Organization> orglist = new ArrayList<>();
                         for (int k = 0; k < orgCount; k++) {
-                            Organization organization = new Organization(new Link(dis.readUTF(), exist(dis.readUTF())), readPositions(dis));
+                            Organization organization = new Organization(new Link(dis.readUTF(), convert(dis.readUTF())), readPositions(dis));
                             orglist.add(organization);
-                            resume.addSection(SectionType.valueOf(title), new OrganizationSection(orglist));
+                            resume.addSection(title, new OrganizationSection(orglist));
                         }
                     }
                 }
@@ -98,12 +151,18 @@ public class DataStrategy implements Strategy {
         }
     }
 
+    private <T> void forEachWithIOException(Collection<T> entrySet, CollectionConsumer<? super T> action) throws IOException {
+        for (T entry : entrySet) {
+            action.accept(entry);
+        }
+    }
+
     private void writeDate(DataOutputStream dos, LocalDate date) throws IOException {
         dos.writeInt(date.getYear());
         dos.writeInt(date.getMonthValue());
     }
 
-    private String exist(String string) {
+    private String convert(String string) {
         if (!string.equals("null")) {
             return string;
         }
@@ -118,13 +177,13 @@ public class DataStrategy implements Strategy {
                     readDate(dis),
                     readDate(dis),
                     dis.readUTF(),
-                    exist(dis.readUTF()));
+                    convert(dis.readUTF()));
             positions.add(position);
         }
         return positions;
     }
 
     private LocalDate readDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(),dis.readInt(),1);
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 }
