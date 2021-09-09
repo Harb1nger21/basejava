@@ -63,13 +63,13 @@ public class DataStrategy implements Strategy {
                     case PERSONAL, OBJECTIVE -> update.addSection(title, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> achievList = new ArrayList<>();
-                        readEachWithIOException(resume, dis, achiv -> achievList.add(dis.readUTF()));
+                        readEachWithIOException(resume, dis, achiev -> achievList.add(dis.readUTF()));
                         update.addSection(title, new ListSection(achievList));
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> orglist = new ArrayList<>();
                         readEachWithIOException(resume, dis, org -> {
-                            Organization organization = new Organization(new Link(dis.readUTF(), convert(dis.readUTF())), readPositions(dis));
+                            Organization organization = new Organization(new Link(dis.readUTF(), convert(dis.readUTF())), readPositions(resume, dis));
                             orglist.add(organization);
                         });
                         update.addSection(title, new OrganizationSection(orglist));
@@ -100,23 +100,19 @@ public class DataStrategy implements Strategy {
     }
 
     private String convert(String string) {
-        if (!string.equals("null")) {
-            return string;
-        }
-        return null;
+        return (!string.equals("null")) ? string: null;
     }
 
-    private List<Organization.Position> readPositions(DataInputStream dis) throws IOException {
+    private List<Organization.Position> readPositions(Resume resume, DataInputStream dis) throws IOException {
         List<Organization.Position> positions = new ArrayList<>();
-        int positionCount = dis.readInt();
-        for (int i = 0; i < positionCount; i++) {
+        readEachWithIOException(resume, dis, pos -> {
             Organization.Position position = new Organization.Position(
                     readDate(dis),
                     readDate(dis),
                     dis.readUTF(),
                     convert(dis.readUTF()));
             positions.add(position);
-        }
+        });
         return positions;
     }
 
