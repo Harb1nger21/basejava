@@ -1,8 +1,9 @@
-package ru.javawebinar.basejava.storage;
+package ru.javawebinar.basejava.storage.abstractClass;
 
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -24,9 +25,9 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
     }
 
     @Override
-    public Resume get(String uuid){
+    public Resume get(String uuid) {
         LOGGER.info("Get " + uuid);
-        return getOut(getKeyIfResumeExist(uuid));
+        return getResume(getKeyIfResumeExist(uuid));
     }
 
     @Override
@@ -69,7 +70,7 @@ public abstract class AbstractStorage<SearchKey> implements Storage {
 
     protected abstract void saveResume(Resume resume, SearchKey key);
 
-    protected abstract Resume getOut(SearchKey key);
+    protected abstract Resume getResume(SearchKey key);
 
     protected abstract void deleteResume(SearchKey key);
 

@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.abstractClass.AbstractMapStorage;
 
 public class MapResumeStorage extends AbstractMapStorage {
     @Override
@@ -9,8 +10,8 @@ public class MapResumeStorage extends AbstractMapStorage {
     }
 
     @Override
-    protected Resume getOut(Object key) {
-        return (Resume)key;
+    protected Resume getResume(Object key) {
+        return (Resume) key;
     }
 
     @Override

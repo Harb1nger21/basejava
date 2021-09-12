@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.storage;
+package ru.javawebinar.basejava.storage.abstractClass;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -30,12 +30,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         if (countElements == storage.length) {
             throw new StorageException("ERROR: ArrayStorage is already has 10000 resume", resume.getUuid());
         }
-        add(resume,index);
+        add(resume, index);
         countElements++;
     }
 
     @Override
-    protected Resume getOut(Integer index) {
+    protected Resume getResume(Integer index) {
         return storage[index];
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected boolean isExist(Integer index) {
-        return  index > -1;
+        return index > -1;
     }
 
     @Override

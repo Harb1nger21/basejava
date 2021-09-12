@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,12 +19,13 @@ public abstract class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
     private static final String UUID_5 = "uuid5";
-    private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1,"Вика Красивая");
-    private static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2,"Антон Сладкий");
-    private static final Resume RESUME_3 = ResumeTestData.createResume(UUID_3,"Катя Хитрая");
+    private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Вика Красивая");
+    private static final Resume RESUME_2 = new Resume(UUID_2,"Антон Сладкий");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "Катя Хитрая");
     private static final Resume RESUME_4 = ResumeTestData.createResume(UUID_4, "Григорий Кислин");
-    private static final Resume RESUME_5 = ResumeTestData.createResume(UUID_5,"Рома Вредный");
+    private static final Resume RESUME_5 = ResumeTestData.createResume(UUID_5, "Рома Вредный");
     protected final Storage storage;
+    protected static final File STORAGE_DIR = new File("C:\\Users\\Victoriya\\Desktop\\Программирование\\java\\storage");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -31,6 +33,7 @@ public abstract class AbstractStorageTest {
 
     @Before
     public void setUp() {
+        storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -81,7 +84,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateTest() {
-        Resume expectedResume = new Resume(UUID_2, "что-то новое");
+        Resume expectedResume = ResumeTestData.createResume(UUID_2, "что-то новое");
         storage.update(expectedResume);
         assertEquals(expectedResume, storage.get(UUID_2));
     }

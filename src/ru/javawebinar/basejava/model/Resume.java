@@ -1,17 +1,29 @@
 package ru.javawebinar.basejava.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume> {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Resume implements Comparable<Resume>, Serializable {
+    private static final long serialVersionUID = 1L;
 
     // Unique identifier
     private String uuid;
-    private final String fullName;
-    private final Map<ContactType, ContactList> contactMap = new HashMap<>();
-    private final Map<SectionType, AbstractSection> sectionsMap = new HashMap<>();
+
+    private String fullName;
+
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
+
+    public Resume() {
+    }
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -22,62 +34,63 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
-        contactMap.put(ContactType.PHONE, new ContactList());
-        contactMap.put(ContactType.SOCIAL, new ContactList());
-        contactMap.put(ContactType.EMAIL, new ContactList());
-        sectionsMap.put(SectionType.PERSONAL, new AbstractSection.TextSection());
-        sectionsMap.put(SectionType.OBJECTIVE, new AbstractSection.TextSection());
-        sectionsMap.put(SectionType.ACHIEVEMENT, new AbstractSection.ListSection());
-        sectionsMap.put(SectionType.QUALIFICATIONS, new AbstractSection.ListSection());
-        sectionsMap.put(SectionType.EXPERIENCE, new AbstractSection.MapSection());
-        sectionsMap.put(SectionType.EDUCATION, new AbstractSection.MapSection());
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public String getFullName() {
+        return fullName;
     }
 
-    public Map<SectionType, AbstractSection> getSectionsMap() {
-        return sectionsMap;
+    public Map<ContactType, String> getContacts() {
+        return contacts;
     }
 
-    public Map<ContactType, ContactList> getContactMap() {
-        return contactMap;
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
     }
 
-    @Override
-    public String toString() {
-        return "Resume{" +
-                "uuid='" + uuid + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", contactMap=" + contactMap +
-                ", sectionsMap=" + sectionsMap +
-                '}';
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public void addContact(ContactType type, String value) {
+        contacts.put(type, value);
+    }
+
+    public void addSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) &&
-                fullName.equals(resume.fullName) &&
-                Objects.equals(contactMap, resume.contactMap) &&
-                Objects.equals(sectionsMap, resume.sectionsMap);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName, contactMap, sectionsMap);
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
-    public int compareTo(Resume resume) {
-        final int fullNameCompare = fullName.compareTo(resume.fullName);
-        return fullNameCompare != 0 ? fullNameCompare : uuid.compareTo(resume.uuid);
+    public String toString() {
+        return uuid + '(' + fullName + ')';
+    }
+
+    @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }
