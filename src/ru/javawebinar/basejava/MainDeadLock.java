@@ -1,29 +1,41 @@
 package ru.javawebinar.basejava;
 
+import ru.javawebinar.basejava.model.Resume;
+
 public class MainDeadLock {
-    private static final int seven = 7;
-    private static final int five = 5;
+    private final static Resume firstResume = ResumeTestData.createResume("uuid1", "Антон");
+    private final static Resume secondResume = ResumeTestData.createResume("uuid2", "Вика");
+
     private static final Thread firstThread = new Thread() {
         @Override
         public void run() {
-            incForFirstThread();
+            printResume(firstResume, secondResume);
         }
     };
 
     private static final Thread secondThread = new Thread(new Runnable() {
         @Override
         public void run() {
-            incForSecondThread();
+            printResume(secondResume, firstResume);
         }
     });
 
-    private static int incForFirstThread() {
-        return seven + incForSecondThread();
+
+    private static synchronized void printResume(Resume firstResume, Resume secondResume) {
+        String firstResumeInfo = firstResume.getUuid()
+                + firstResume.getFullName()
+                + firstResume.getContacts()
+                + firstResume.getSections();
+
+        String secondResumeInfo = secondResume.getUuid()
+                + secondResume.getFullName()
+                + secondResume.getContacts()
+                + secondResume.getSections();
+
+        System.out.println(firstResumeInfo);
+        System.out.println(secondResumeInfo);
     }
 
-    private static int incForSecondThread() {
-        return five + incForFirstThread();
-    }
 
     public static void main(String[] args) {
         firstThread.start();
