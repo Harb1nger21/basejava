@@ -1,44 +1,34 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.model.Resume;
-
 public class MainDeadLock {
-    private final static Resume firstResume = ResumeTestData.createResume("uuid1", "Антон");
-    private final static Resume secondResume = ResumeTestData.createResume("uuid2", "Вика");
+    public static void main(String[] args) {
+        firstThread.start();
+        secondThread.start();
+    }
+
+    private static String firstString = "первая строка";
+    private static String secondString = "вторая строка";
 
     private static final Thread firstThread = new Thread() {
         @Override
         public void run() {
-            printResume(firstResume, secondResume);
+            runFirstThread("новая");
         }
     };
-
     private static final Thread secondThread = new Thread(new Runnable() {
         @Override
         public void run() {
-            printResume(secondResume, firstResume);
+            runSecondThread("обновленная");
         }
     });
 
-
-    private static synchronized void printResume(Resume firstResume, Resume secondResume) {
-        String firstResumeInfo = firstResume.getUuid()
-                + firstResume.getFullName()
-                + firstResume.getContacts()
-                + firstResume.getSections();
-
-        String secondResumeInfo = secondResume.getUuid()
-                + secondResume.getFullName()
-                + secondResume.getContacts()
-                + secondResume.getSections();
-
-        System.out.println(firstResumeInfo);
-        System.out.println(secondResumeInfo);
+    private static synchronized void runFirstThread(String string) {
+        firstString = string + " " + firstString;
+        runSecondThread(string);
     }
 
-
-    public static void main(String[] args) {
-        firstThread.start();
-        secondThread.start();
+    private static synchronized void runSecondThread(String string) {
+        secondString = string + " " + secondString;
+        runFirstThread(string);
     }
 }
