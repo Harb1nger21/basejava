@@ -19,8 +19,8 @@ public class MainDeadLock {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(Thread.currentThread().getName());
-            System.out.println(Thread.currentThread().getState());
+            System.out.println(Thread.currentThread().getName() + " captured " + string1.getClass().getName() + " \"" + string1 + "\"");
+            System.out.println(Thread.currentThread().getName() + " waiting for capture " + string1.getClass().getName() + " \"" + string2 + "\"");
             synchronized (string2) {
                 System.out.println("deadlock");
             }
