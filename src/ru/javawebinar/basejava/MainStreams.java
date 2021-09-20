@@ -21,28 +21,16 @@ public class MainStreams {
     }
 
     private static int minValue(int[] values) {
-        final int[] multiply = {Arrays.stream(values).distinct().toArray().length};
-        return Arrays.stream(values).distinct().reduce(0, (left, right) -> {
-            multiply[0]--;
-            return left + (right * (int) Math.pow(10, multiply[0]));
-        });
+        return Arrays.stream(values).distinct().sorted().reduce(0, (left, right) -> left * 10 + right);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int remainder = integers.stream().reduce(Integer::sum).get() % 2;
-        return integers.stream().flatMap((Function<Integer, Stream<Integer>>) integer -> {
-            switch (integer % 2) {
-                case 0:
-                    if (remainder == 0) {
-                        return Stream.of(integer);
-                    }
-                    break;
-                case 1:
-                    if (remainder == 1) {
-                        return Stream.of(integer);
-                    }
+        int remainder = integers.stream().reduce(0, Integer::sum) % 2;
+        return integers.stream().filter(integer -> {
+            if (remainder == 0 && integer % 2 == 0) {
+                return true;
             }
-            return Stream.empty();
+            return remainder == 1 && integer % 2 == 1;
         }).collect(Collectors.toList());
     }
 }
