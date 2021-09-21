@@ -2,10 +2,7 @@ package ru.javawebinar.basejava;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MainStreams {
     private static final int[] VALUES = {1, 2, 3, 3, 2, 3};
@@ -21,16 +18,16 @@ public class MainStreams {
     }
 
     private static int minValue(int[] values) {
-        return Arrays.stream(values).distinct().sorted().reduce(0, (left, right) -> left * 10 + right);
+        return Arrays.stream(values)
+                .distinct()
+                .sorted()
+                .reduce(0, (left, right) -> left * 10 + right);
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int remainder = integers.stream().reduce(0, Integer::sum) % 2;
-        return integers.stream().filter(integer -> {
-            if (remainder == 0 && integer % 2 == 0) {
-                return true;
-            }
-            return remainder == 1 && integer % 2 == 1;
-        }).collect(Collectors.toList());
+        return integers.stream()
+                .filter(integer -> (remainder == 0 && integer % 2 == 0) || (remainder == 1 && integer % 2 == 1))
+                .collect(Collectors.toList());
     }
 }
