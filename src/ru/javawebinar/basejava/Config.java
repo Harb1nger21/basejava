@@ -10,12 +10,8 @@ public class Config {
     private static final File PROPS = new File("config\\resumes.properties");
     private static final Config INSTANCE = new Config();
 
-    private Properties props = new Properties();
-    private File storageDir;
-
-    public static Config get() {
-        return INSTANCE;
-    }
+    private final Properties props = new Properties();
+    private final File storageDir;
 
     private Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
@@ -26,7 +22,15 @@ public class Config {
         }
     }
 
+    public static Config get() {
+        return INSTANCE;
+    }
+
     public File getStorageDir() {
         return storageDir;
+    }
+
+    public Properties getProps(){
+        return props;
     }
 }
