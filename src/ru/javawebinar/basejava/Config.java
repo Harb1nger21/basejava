@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava;
 
+import ru.javawebinar.basejava.sql.SqlStorage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +32,8 @@ public class Config {
         return storageDir;
     }
 
-    public Properties getProps(){
-        return props;
+    public SqlStorage getStorage() {
+        return new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"),
+                props.getProperty("db.password"));
     }
 }
