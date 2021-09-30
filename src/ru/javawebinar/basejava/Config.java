@@ -14,11 +14,14 @@ public class Config {
 
     private final Properties props = new Properties();
     private final File storageDir;
+    private final SqlStorage storage;
 
     private Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
+            storage = new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"),
+                    props.getProperty("db.password"));
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
@@ -33,7 +36,6 @@ public class Config {
     }
 
     public SqlStorage getStorage() {
-        return new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"),
-                props.getProperty("db.password"));
+        return storage;
     }
 }

@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import ru.javawebinar.basejava.sql.SqlStorageTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -14,7 +15,8 @@ import org.junit.runners.Suite;
         PathStorageTest.class,
         XmlStorageTest.class,
         JsonStorageTest.class,
-        DataStrategyTest.class
+        DataStrategyTest.class,
+        SqlStorageTest.class
 })
 public class AllStorageTest {
 }
