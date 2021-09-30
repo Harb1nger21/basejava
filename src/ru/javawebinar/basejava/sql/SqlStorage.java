@@ -19,7 +19,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        helper.startExecution("DELETE FROM resume", (Executor<Void>) ps -> {
+        helper.execute("DELETE FROM resume", ps -> {
             ps.execute();
             return null;
         });
@@ -27,33 +27,34 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        helper.startExecution("UPDATE resume SET full_name=? WHERE uuid=?", (Executor<Void>) ps -> {
+        helper.execute("UPDATE resume SET full_name=? WHERE uuid=?", ps -> {
+            String uuid = r.getUuid();
             ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
-            executeUpdate(ps, r.getUuid());
+            ps.setString(2, uuid);
+            executeUpdate(ps, uuid);
             return null;
         });
     }
 
     @Override
     public void save(Resume r) {
-        helper.startExecution("INSERT INTO resume(uuid, full_name) VALUES (?,?)", (Executor<Void>) ps -> {
+        helper.execute("INSERT INTO resume(uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, r.getUuid());
             ps.setString(2, r.getFullName());
-            try {
+//            try {
                 ps.execute();
-            } catch (SQLException e) {
-                if (e.getSQLState().equals("23505")) {
-                    throw new ExistStorageException(r.getUuid());
-                }
-            }
+//            } catch (SQLException e) {
+//                if (e.getSQLState().equals("23505")) {
+//                    throw new ExistStorageException(r.getUuid());
+//                }
+//            }
             return null;
         });
     }
 
     @Override
     public Resume get(String uuid) {
-        return helper.startExecution("SELECT * FROM resume WHERE uuid =?", ps -> {
+        return helper.execute("SELECT * FROM resume WHERE uuid =?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -65,7 +66,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        helper.startExecution("DELETE FROM resume WHERE uuid=?", ps -> {
+        helper.execute("DELETE FROM resume WHERE uuid=?", ps -> {
             ps.setString(1, uuid);
             executeUpdate(ps, uuid);
             return null;
@@ -74,20 +75,19 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>();
-        helper.startExecution("SELECT * FROM resume ORDER BY full_name, uuid", (Executor<Void>) ps -> {
+        return helper.execute("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
+            List<Resume> result = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
-            return null;
+            return result;
         });
-        return result;
     }
 
     @Override
     public int size() {
-        return helper.startExecution("SELECT COUNT(*) FROM resume", ps -> {
+        return helper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
             rs.next();
             return rs.getInt("count");
