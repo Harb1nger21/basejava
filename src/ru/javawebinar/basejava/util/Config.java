@@ -1,6 +1,6 @@
-package ru.javawebinar.basejava;
+package ru.javawebinar.basejava.util;
 
-import ru.javawebinar.basejava.sql.SqlStorage;
+import ru.javawebinar.basejava.storage.SqlStorage;
 
 import java.io.File;
 import java.io.FileInputStream;

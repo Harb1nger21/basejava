@@ -8,11 +8,11 @@ import java.util.*;
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
         Resume newResume = new Resume(uuid, fullName);
-//        newResume.addContact(ContactType.PHONE, "79218550482");
-//        newResume.addContact(ContactType.SKYPE, "grigory.kislin");
-//        newResume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-//        newResume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
-//        newResume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
+        newResume.addContact(ContactType.PHONE, "79218550482");
+        newResume.addContact(ContactType.SKYPE, "grigory.kislin");
+        newResume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        newResume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
+        newResume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
 //
 //        newResume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
 //        newResume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
