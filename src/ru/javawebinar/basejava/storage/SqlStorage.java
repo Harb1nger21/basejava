@@ -35,7 +35,11 @@ public class SqlStorage implements Storage {
                 ps.setString(2, uuid);
                 executeUpdate(ps, uuid);
             }
-            try (PreparedStatement ps = conn.prepareStatement("UPDATE contact SET value=? WHERE resume_uuid=? AND type=?")) {
+            try(PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")){
+                ps.setString(1, r.getUuid());
+                ps.execute();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) VALUES (?,?,?)")) {
                 for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
                     ps.setString(1, entry.getKey().name());
                     ps.setString(2, entry.getValue());
@@ -85,8 +89,7 @@ public class SqlStorage implements Storage {
                     do {
                         String typeName = rs.getString("type");
                         if (typeName != null) {
-                            ContactType type = ContactType.valueOf(typeName);
-                            resume.addContact(type, rs.getString("value"));
+                            resume.addContact(ContactType.valueOf(typeName), rs.getString("value"));
                         }
                     } while (rs.next());
                     return resume;
