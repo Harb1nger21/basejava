@@ -35,7 +35,7 @@ public class SqlStorage implements Storage {
                 ps.setString(2, uuid);
                 executeUpdate(ps, uuid);
             }
-            try(PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")){
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
                 ps.setString(1, r.getUuid());
                 ps.execute();
             }
@@ -111,7 +111,7 @@ public class SqlStorage implements Storage {
         return helper.execute("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
             List<Resume> result = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 result.add(get(rs.getString("uuid")));
             }
             return result;
