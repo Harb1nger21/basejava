@@ -39,15 +39,7 @@ public class SqlStorage implements Storage {
                 ps.setString(1, r.getUuid());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) VALUES (?,?,?)")) {
-                for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
-                    ps.setString(1, entry.getKey().name());
-                    ps.setString(2, entry.getValue());
-                    ps.setString(3, r.getUuid());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            addContacts(conn, r);
             return null;
         });
     }
@@ -60,15 +52,7 @@ public class SqlStorage implements Storage {
                 ps.setString(2, r.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
-                for (Map.Entry<ContactType, String> entry : r.getContacts().entrySet()) {
-                    ps.setString(1, r.getUuid());
-                    ps.setString(2, entry.getKey().name());
-                    ps.setString(3, entry.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
+            addContacts(conn, r);
             return null;
         });
     }
@@ -130,6 +114,18 @@ public class SqlStorage implements Storage {
     private void executeUpdate(PreparedStatement ps, String uuid) throws SQLException {
         if (ps.executeUpdate() == 0) {
             throw new NotExistStorageException(uuid);
+        }
+    }
+
+    private void addContacts(Connection conn, Resume resume) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (type, value, resume_uuid) VALUES (?,?,?)")) {
+            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+                ps.setString(1, entry.getKey().name());
+                ps.setString(2, entry.getValue());
+                ps.setString(3, resume.getUuid());
+                ps.addBatch();
+            }
+            ps.executeBatch();
         }
     }
 }
