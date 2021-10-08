@@ -98,9 +98,10 @@ public class SqlStorage implements Storage {
             String tempUuid = "";
             while (rs.next()) {
                 Resume resume;
-                if(!rs.getString("uuid").equals(tempUuid)){
-                    resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-                    tempUuid = rs.getString("uuid");
+                String uuid = rs.getString("uuid");
+                if(!uuid.equals(tempUuid)){
+                    resume = new Resume(uuid, rs.getString("full_name"));
+                    tempUuid = uuid;
                     addContact(rs, resume);
                     result.add(resume);
                 }else{
