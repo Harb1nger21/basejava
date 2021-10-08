@@ -91,7 +91,7 @@ public class SqlStorage implements Storage {
         return helper.execute("SELECT uuid, full_name, type, value FROM resume" +
                 " LEFT JOIN contact ON resume.uuid = contact.resume_uuid " +
                 "ORDER BY full_name, uuid", ps -> {
-            Map<String, Resume> result = new HashMap<>();
+            Map<String, Resume> result = new LinkedHashMap<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Resume resume;
@@ -99,12 +99,10 @@ public class SqlStorage implements Storage {
                 if (!result.containsKey(uuid)) {
                     resume = new Resume(uuid, rs.getString("full_name"));
                     result.put(uuid, resume);
-                    addContact(rs, resume);
-                } else {
-                    addContact(rs, result.get(uuid));
                 }
+                addContact(rs, result.get(uuid));
             }
-            return result.values().stream().sorted().collect(Collectors.toList());
+            return new ArrayList<>(result.values());
         });
     }
 
