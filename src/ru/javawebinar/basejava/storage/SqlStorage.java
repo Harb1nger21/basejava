@@ -7,7 +7,6 @@ import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,23 +89,21 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return helper.execute("SELECT uuid, full_name, type, value FROM resume" +
-                " LEFT JOIN contact ON resume.uuid = contact.resume_uuid " +
-                "ORDER BY full_name, uuid", ps -> {
+        return helper.transactionalExecute(conn -> {
             List<Resume> result = new ArrayList<>();
-            ResultSet rs = ps.executeQuery();
-            String tempUuid = "";
-            while (rs.next()) {
-                Resume resume;
-                String uuid = rs.getString("uuid");
-                if(!uuid.equals(tempUuid)){
-                    resume = new Resume(uuid, rs.getString("full_name"));
-                    tempUuid = uuid;
-                    addContact(rs, resume);
-                    result.add(resume);
-                }else{
-                    resume = result.get(result.size()-1);
-                    addContact(rs, resume);
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                }
+            }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact where resume_uuid = ?")) {
+                for (Resume resume : result) {
+                    ps.setString(1, resume.getUuid());
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        addContact(rs, resume);
+                    }
                 }
             }
             return result;
