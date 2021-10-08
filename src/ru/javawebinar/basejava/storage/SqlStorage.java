@@ -6,9 +6,8 @@ import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
@@ -90,23 +89,33 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return helper.transactionalExecute(conn -> {
-            List<Resume> result = new ArrayList<>();
+            Map<String, Resume> result = new HashMap<>();
+//            List<Resume> result = new ArrayList<>();
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    result.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                    String uuid = rs.getString("uuid");
+                    result.put(uuid, new Resume(uuid, rs.getString("full_name")));
+//                    result.add(new Resume(uuid, rs.getString("full_name")));
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact where resume_uuid = ?")) {
-                for (Resume resume : result) {
-                    ps.setString(1, resume.getUuid());
+                for(Map.Entry<String, Resume> entry: result.entrySet()){
+                    ps.setString(1, entry.getKey());
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
-                        addContact(rs, resume);
+                        addContact(rs, entry.getValue());
                     }
                 }
+//                for (Resume resume : result) {
+//                    ps.setString(1, resume.getUuid());
+//                    ResultSet rs = ps.executeQuery();
+//                    while (rs.next()) {
+//                        addContact(rs, resume);
+//                    }
+//                }
             }
-            return result;
+            return result.values().stream().sorted().collect(Collectors.toList());
         });
     }
 
