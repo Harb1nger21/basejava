@@ -90,30 +90,21 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return helper.transactionalExecute(conn -> {
             Map<String, Resume> result = new HashMap<>();
-//            List<Resume> result = new ArrayList<>();
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     String uuid = rs.getString("uuid");
                     result.put(uuid, new Resume(uuid, rs.getString("full_name")));
-//                    result.add(new Resume(uuid, rs.getString("full_name")));
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact where resume_uuid = ?")) {
-                for(Map.Entry<String, Resume> entry: result.entrySet()){
+                for (Map.Entry<String, Resume> entry : result.entrySet()) {
                     ps.setString(1, entry.getKey());
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         addContact(rs, entry.getValue());
                     }
                 }
-//                for (Resume resume : result) {
-//                    ps.setString(1, resume.getUuid());
-//                    ResultSet rs = ps.executeQuery();
-//                    while (rs.next()) {
-//                        addContact(rs, resume);
-//                    }
-//                }
             }
             return result.values().stream().sorted().collect(Collectors.toList());
         });
