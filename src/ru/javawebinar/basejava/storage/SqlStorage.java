@@ -100,7 +100,7 @@ public class SqlStorage implements Storage {
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact where resume_uuid = ?")) {
-                for(Map.Entry<String, Resume> entry: result.entrySet()){
+                for (Map.Entry<String, Resume> entry: result.entrySet()){
                     ps.setString(1, entry.getKey());
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
