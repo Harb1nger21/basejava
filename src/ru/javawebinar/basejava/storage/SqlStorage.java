@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.sql.SqlTransaction;
 
 import java.sql.*;
 import java.util.*;
@@ -88,19 +89,23 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return helper.execute("SELECT uuid, full_name, type, value FROM resume" +
-                " LEFT JOIN contact ON resume.uuid = contact.resume_uuid " +
-                "ORDER BY full_name, uuid", ps -> {
+        return helper.transactionalExecute(conn -> {
             Map<String, Resume> result = new LinkedHashMap<>();
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Resume resume;
-                String uuid = rs.getString("uuid");
-                if (!result.containsKey(uuid)) {
-                    resume = new Resume(uuid, rs.getString("full_name"));
-                    result.put(uuid, resume);
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    result.put(uuid, new Resume(uuid, rs.getString("full_name")));
                 }
-                addContact(rs, result.get(uuid));
+            }
+            try (PreparedStatement ps = conn.prepareStatement("SELECT type, value FROM contact where resume_uuid =?")) {
+                for (Map.Entry<String, Resume> entry : result.entrySet()) {
+                    ps.setString(1, entry.getKey());
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        addContact(rs, entry.getValue());
+                    }
+                }
             }
             return new ArrayList<>(result.values());
         });
