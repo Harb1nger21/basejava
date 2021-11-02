@@ -4,11 +4,9 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
-import ru.javawebinar.basejava.sql.SqlTransaction;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SqlStorage implements Storage {
     private final SqlHelper helper;
