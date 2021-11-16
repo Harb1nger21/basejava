@@ -28,16 +28,13 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume resume;
         switch (action) {
-            case "delete":
+            case "delete" -> {
                 storage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
-            case "view":
-            case "edit":
-                resume = storage.get(uuid);
-                break;
-            default:
-                throw new IllegalArgumentException("Action " + action + " is illegal");
+            }
+            case "view", "edit" -> resume = storage.get(uuid);
+            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
         request.getRequestDispatcher(
@@ -46,7 +43,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
