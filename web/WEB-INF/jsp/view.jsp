@@ -1,3 +1,4 @@
+<%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,6 +19,26 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
+        <c:forEach var="sections" items="${resume.sections}">
+            <jsp:useBean id="sections"
+                         type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType, ru.javawebinar.basejava.model.AbstractSection>"/>
+                <% SectionType key = sections.getKey(); %>
+    <h3><%=key.getTitle()%>
+    </h3>
+    <%
+        if (key == SectionType.PERSONAL || key == SectionType.OBJECTIVE) {
+            out.println(((TextSection) sections.getValue()).getContent());
+        }
+        out.println();
+        if (key == SectionType.ACHIEVEMENT || key == SectionType.QUALIFICATIONS) {
+            StringBuilder all = new StringBuilder();
+            for (String string : ((ListSection) sections.getValue()).getItems()) {
+                all.append("<li>").append(string).append("</li>");
+            }
+            out.println(all);
+        }
+    %>
+    </c:forEach>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
