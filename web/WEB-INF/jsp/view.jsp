@@ -1,3 +1,5 @@
+<%@ page import="ru.javawebinar.basejava.model.*" %>
+<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,6 +20,26 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
+        <c:forEach var="sections" items="${resume.sections}">
+            <jsp:useBean id="sections"
+                         type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType, ru.javawebinar.basejava.model.AbstractSection>"/>
+            <c:set var="key" value="${sections.key}"/>
+    <h3>${key.title}</h3>
+    <c:choose>
+        <c:when test="${key == SectionType.PERSONAL || key == SectionType.OBJECTIVE}">
+            <%=sections.getValue()%>
+        </c:when>
+        <c:when test="${key == SectionType.ACHIEVEMENT || key == SectionType.QUALIFICATIONS}">
+            <c:set var="content" value="${sections.value}"/>
+            <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
+            <ul>
+                <c:forEach var="item" items="${content.items}">
+                    <li><c:out value="${item}"/></li>
+                </c:forEach>
+            </ul>
+        </c:when>
+    </c:choose>
+    </c:forEach>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

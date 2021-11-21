@@ -1,13 +1,14 @@
 package ru.javawebinar.basejava.web;
 
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.util.Config;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
@@ -55,6 +56,22 @@ public class ResumeServlet extends HttpServlet {
                 resume.addContact(type, value);
             } else {
                 resume.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            switch (type) {
+                case PERSONAL, OBJECTIVE -> {
+                    String content = request.getParameter(type.name());
+                    if (content != null && content.trim().length() != 0) {
+                        resume.addSection(type, new TextSection(content));
+                    } else {
+                        resume.getSections().remove(type);
+                    }
+                }
+                case ACHIEVEMENT, QUALIFICATIONS -> {
+                    List<String> content = Arrays.asList(request.getParameterValues(type.name()));
+                    resume.addSection(type, new ListSection(content));
+                }
             }
         }
         storage.update(resume);
