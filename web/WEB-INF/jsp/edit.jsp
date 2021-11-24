@@ -29,15 +29,23 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <h3>${type.title}</h3>
             <c:choose>
-                <c:when test="${type.name() == SectionType.PERSONAL || type.name() == SectionType.OBJECTIVE}">
-                    <input type="text" name="${type.name()}" size="100" value="${resume.getSection(type)}">
+                <c:when test="${resume.getSection(type) != null}">
+                    <c:choose>
+                        <c:when test="${type.name() == SectionType.PERSONAL || type.name() == SectionType.OBJECTIVE}">
+                                <textarea cols="100" name="${type.name()}"
+                                          rows="2">${resume.getSection(type)}</textarea>
+                        </c:when>
+                        <c:when test="${type.name() == SectionType.ACHIEVEMENT || type.name() == SectionType.QUALIFICATIONS}">
+                            <c:set var="content" value="${resume.getSection(type)}"/>
+                            <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
+                            <c:forEach var="item" items="${content.items}">
+                                <textarea cols="100" name="${type.name()}" rows="4">${item}</textarea>
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                 </c:when>
-                <c:when test="${type.name() == SectionType.ACHIEVEMENT || type.name() == SectionType.QUALIFICATIONS}">
-                    <c:set var="content" value="${resume.getSection(type)}"/>
-                    <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
-                    <c:forEach var="item" items="${content.items}">
-                        <textarea cols="100" name="${type.name()}" rows="4">${item}</textarea>
-                    </c:forEach>
+                <c:when test="${resume.getSection(type) == null}">
+                    <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
                 </c:when>
             </c:choose>
         </c:forEach>
