@@ -69,12 +69,17 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
                 case ACHIEVEMENT, QUALIFICATIONS -> {
-                    List<String> content = Arrays.asList(request.getParameterValues(type.name()));
-                    resume.addSection(type, new ListSection(content));
+                    String content = request.getParameter(type.name()).trim();
+                    if (content.length() != 0) {
+                        List<String> list = Arrays.asList(content.split("\n"));
+                        resume.addSection(type, new ListSection(list));
+                    }
                 }
             }
         }
-        storage.update(resume);
+        if (!resume.getFullName().equals("")) {
+            storage.update(resume);
+        }
         response.sendRedirect("resume");
     }
 }

@@ -1,7 +1,7 @@
-<%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -35,6 +35,27 @@
             <ul>
                 <c:forEach var="item" items="${content.items}">
                     <li><c:out value="${item}"/></li>
+                </c:forEach>
+            </ul>
+        </c:when>
+        <c:when test="${key == SectionType.EXPERIENCE || key == SectionType.EDUCATION}">
+            <c:set var="orgContent" value="${sections.value}"/>
+            <jsp:useBean id="orgContent" type="ru.javawebinar.basejava.model.OrganizationSection"/>
+            <ul>
+                <c:forEach var="organization" items="${orgContent.organizations}">
+                    <h4><a href="${organization.homePage.url}">${organization.homePage.name}</a></h4>
+                    <c:forEach var="position" items="${organization.positions}">
+                        <fmt:parseDate value="${position.startDate}" type="date" pattern="yyyy-MM-dd"
+                                       var="parsedStart"/>
+                        <fmt:formatDate value="${parsedStart}" type="date" pattern="yyyy.MM" var="start"/>
+                        <fmt:parseDate value="${position.endDate}" type="date" pattern="yyyy-MM-dd" var="parsedEnd"/>
+                        <fmt:formatDate value="${parsedEnd}" type="date" pattern="yyyy.MM" var="end"/>
+                        <c:out value="${start} - ${position.endDate.year > 2500 ? 'настояшее время' : end}"/>
+                        <c:if test="${key == SectionType.EXPERIENCE}">
+                            <h5>${position.title}</h5>
+                        </c:if>
+                        <c:out value="${position.description}"/>
+                    </c:forEach>
                 </c:forEach>
             </ul>
         </c:when>

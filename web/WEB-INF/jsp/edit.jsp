@@ -29,6 +29,9 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <h3>${type.title}</h3>
             <c:choose>
+                <c:when test="${resume.getSection(type) == null}">
+                    <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
+                </c:when>
                 <c:when test="${resume.getSection(type) != null}">
                     <c:choose>
                         <c:when test="${type.name() == SectionType.PERSONAL || type.name() == SectionType.OBJECTIVE}">
@@ -38,20 +41,18 @@
                         <c:when test="${type.name() == SectionType.ACHIEVEMENT || type.name() == SectionType.QUALIFICATIONS}">
                             <c:set var="content" value="${resume.getSection(type)}"/>
                             <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
-                            <c:forEach var="item" items="${content.items}">
-                                <textarea cols="100" name="${type.name()}" rows="4">${item}</textarea>
-                            </c:forEach>
+                            <textarea cols="100" name="${type.name()}" rows="${content.items.size()}">
+<c:forEach var="item" items="${content.items}">${item.trim()}
+</c:forEach>
+                            </textarea>
                         </c:when>
                     </c:choose>
-                </c:when>
-                <c:when test="${resume.getSection(type) == null}">
-                    <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
                 </c:when>
             </c:choose>
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
