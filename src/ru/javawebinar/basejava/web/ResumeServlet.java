@@ -8,7 +8,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
@@ -71,7 +74,7 @@ public class ResumeServlet extends HttpServlet {
                 case ACHIEVEMENT, QUALIFICATIONS -> {
                     String content = request.getParameter(type.name()).trim();
                     if (content.length() != 0) {
-                        List<String> list = Arrays.asList(content.split("\n"));
+                        List<String> list = Arrays.stream(content.split("\r\n")).filter(s -> !s.equals("")).collect(Collectors.toList());
                         resume.addSection(type, new ListSection(list));
                     }
                 }

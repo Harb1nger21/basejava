@@ -29,6 +29,11 @@
             </tr>
         </c:forEach>
     </table>
+    <br/>
+    <hr>
+    <form action="\WEB-INF\jsp\edit.jsp" >
+        <button type="button">Добавить</button>
+    </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

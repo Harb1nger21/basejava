@@ -7,13 +7,13 @@ public enum ContactType {
     SKYPE("Skype") {
         @Override
         public String toHtml0(String value) {
-            return "<a href='skype" + value + "'>" + value + "</a>";
+            return getTitle()+": <a href='skype" + value + "'>" + value + "</a>";
         }
     },
     MAIL("Почта") {
         @Override
         public String toHtml0(String value) {
-            return "<a href='mailto:" + value + "'>" + value + "</a>";
+            return getTitle()+": <a href='mailto:" + value + "'>" + value + "</a>";
         }
     },
     LINKEDIN("Профиль LinkedIn"),
