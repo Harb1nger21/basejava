@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,7 @@ public class ResumeServlet extends HttpServlet {
                 return;
             }
             case "view", "edit" -> resume = storage.get(uuid);
+            case "add" -> resume = new Resume(uuid, "");
             default -> throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
@@ -51,6 +53,10 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
+        String action = request.getParameter("action");
+        if (action != null && action.equals("add")) {
+            storage.save(new Resume(uuid, fullName));
+        }
         Resume resume = storage.get(uuid);
         resume.setFullName(fullName);
         for (ContactType type : ContactType.values()) {

@@ -1,4 +1,5 @@
 <%@ page import="ru.javawebinar.basejava.model.ContactType" %>
+<%@ page import="java.util.UUID" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -31,9 +32,8 @@
     </table>
     <br/>
     <hr>
-    <form action="\WEB-INF\jsp\edit.jsp" >
-        <button type="button">Добавить</button>
-    </form>
+    <button type="submit" onclick="window.location.href = 'resume?uuid=<%=UUID.randomUUID().toString()%>&action=add'">Добавить
+    </button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

@@ -15,6 +15,9 @@
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
+        <c:if test="${param.get('action').equals('add')}">
+            <input type="hidden" name="action" value="add">
+        </c:if>
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
