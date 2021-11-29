@@ -10,7 +10,7 @@
     <title>Список всех резюме</title>
 </head>
 <body>
-<jsp:include page="fragments/header.jsp"/>
+<jsp:include page="fragments/header.jsp"/><br/>
 <section>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
@@ -32,8 +32,6 @@
     </table>
     <br/>
     <hr>
-    <button type="submit" onclick="window.location.href = 'resume?uuid=<%=UUID.randomUUID().toString()%>&action=add'">Добавить
-    </button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

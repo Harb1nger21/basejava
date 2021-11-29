@@ -52,13 +52,26 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+        String fullName = request.getParameter("fullName").trim();
         String action = request.getParameter("action");
-        if (action != null && action.equals("add")) {
-            storage.save(new Resume(uuid, fullName));
+        if (!fullName.equals("")) {
+            switch (action) {
+                case "add" -> {
+                    storage.save(new Resume(uuid, fullName));
+                    getResume(uuid, request);
+                }
+                case "edit" -> {
+                    Resume resume = getResume(uuid, request);
+                    resume.setFullName(fullName);
+                    storage.update(resume);
+                }
+            }
         }
+        response.sendRedirect("resume");
+    }
+
+    private Resume getResume(String uuid, HttpServletRequest request) {
         Resume resume = storage.get(uuid);
-        resume.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -86,9 +99,6 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        if (!resume.getFullName().equals("")) {
-            storage.update(resume);
-        }
-        response.sendRedirect("resume");
+        return resume;
     }
 }

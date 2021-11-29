@@ -54,7 +54,7 @@
             </c:choose>
         </c:forEach>
         <hr>
-        <button type="submit">Сохранить</button>
+        <button type="submit" onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=edit'">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
