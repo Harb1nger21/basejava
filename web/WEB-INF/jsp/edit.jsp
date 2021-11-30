@@ -15,9 +15,14 @@
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
-        <c:if test="${param.get('action').equals('add')}">
-            <input type="hidden" name="action" value="add">
-        </c:if>
+        <c:choose>
+            <c:when test="${param.get('action').equals('add')}">
+                <input type="hidden" name="action" value="add">
+            </c:when>
+            <c:when test="${param.get('action').equals('edit')}">
+                <input type="hidden" name="action" value="edit">
+            </c:when>
+        </c:choose>
         <dl>
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size="50" value="${resume.fullName}"></dd>
@@ -54,7 +59,7 @@
             </c:choose>
         </c:forEach>
         <hr>
-        <button type="submit" onclick="window.location.href = 'resume?uuid=${resume.uuid}&action=edit'">Сохранить</button>
+        <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>

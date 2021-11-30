@@ -8,10 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
@@ -54,24 +51,8 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName").trim();
         String action = request.getParameter("action");
-        if (!fullName.equals("")) {
-            switch (action) {
-                case "add" -> {
-                    storage.save(new Resume(uuid, fullName));
-                    getResume(uuid, request);
-                }
-                case "edit" -> {
-                    Resume resume = getResume(uuid, request);
-                    resume.setFullName(fullName);
-                    storage.update(resume);
-                }
-            }
-        }
-        response.sendRedirect("resume");
-    }
 
-    private Resume getResume(String uuid, HttpServletRequest request) {
-        Resume resume = storage.get(uuid);
+        Resume resume = new Resume(uuid, fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -99,6 +80,12 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        return resume;
+        if (!fullName.equals("")) {
+            switch (action) {
+                case "add" -> storage.save(resume);
+                case "edit" -> storage.update(resume);
+            }
+        }
+        response.sendRedirect("resume");
     }
 }
