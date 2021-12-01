@@ -54,6 +54,37 @@
 </c:forEach>
                             </textarea>
                         </c:when>
+                        <c:when test="${type.name() == SectionType.EXPERIENCE || type.name() == SectionType.EDUCATION}">
+                            <c:set var="organizations" value="${resume.getSection(type)}"/>
+                            <jsp:useBean id="organizations" type="ru.javawebinar.basejava.model.OrganizationSection"/>
+                            <c:forEach var="organization" items="${organizations.organizations}">
+                                <dl>
+                                    <dt>Название оргазинации</dt>
+                                    <dd><input type="text" name="orgName" size="${organization.homePage.name.length()}"
+                                               value="${organization.homePage.name}"></dd>
+                                    <br/>
+                                    <dt>Сайт оргазинации</dt>
+                                    <dd><input type="text" name="siteName" size="30"
+                                               value="${organization.homePage.url}"></dd>
+                                </dl>
+                                <c:forEach var="orgItem" items="${organization.positions}">
+                                    <dl>
+                                        <dt>Дата начала</dt>
+                                        <dd><input type="text" name="startDate" size="30"
+                                                   value="${orgItem.startDate}"></dd>
+                                        <dt>Дата окончания</dt>
+                                        <dd><input type="text" name="endDate" size="30"
+                                                   value="${orgItem.endDate}"></dd><br/>
+                                        <dt>Позиция/Должность</dt>
+                                        <dd><input type="text" name="post" size="30"
+                                                   value="${orgItem.title}"></dd><br/>
+                                        <dt>Обяанности</dt>
+                                        <dd><textarea cols="100" name="description" rows="5">${orgItem.description}</textarea></dd>
+                                    </dl>
+                                </c:forEach>
+                                <hr>
+                            </c:forEach>
+                        </c:when>
                     </c:choose>
                 </c:when>
             </c:choose>
