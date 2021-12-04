@@ -62,9 +62,9 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
+            String content = request.getParameter(type.name());
             switch (type) {
                 case PERSONAL, OBJECTIVE -> {
-                    String content = request.getParameter(type.name());
                     if (content != null && content.trim().length() != 0) {
                         resume.addSection(type, new TextSection(content));
                     } else {
@@ -72,7 +72,6 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
                 case ACHIEVEMENT, QUALIFICATIONS -> {
-                    String content = request.getParameter(type.name()).trim();
                     if (content.length() != 0) {
                         List<String> list = Arrays.stream(content.split("\r\n")).filter(s -> !s.equals("")).collect(Collectors.toList());
                         resume.addSection(type, new ListSection(list));

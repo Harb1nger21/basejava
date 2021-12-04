@@ -37,8 +37,17 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <h3>${type.title}</h3>
             <c:choose>
-                <c:when test="${resume.getSection(type) == null}">
+                <c:when test="${resume.getSection(type) == null &&
+                 (type.name() == SectionType.PERSONAL ||
+                  type.name() == SectionType.OBJECTIVE ||
+                   type.name() == SectionType.ACHIEVEMENT ||
+                    type.name() == SectionType.QUALIFICATIONS)}">
                     <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
+                </c:when>
+                <c:when test="${resume.getSection(type) == null &&
+                (type.name() == SectionType.EXPERIENCE ||
+                type.name() == SectionType.EDUCATION)}">
+                    <c:import url="fragments/organization.jsp"/>
                 </c:when>
                 <c:when test="${resume.getSection(type) != null}">
                     <c:choose>
@@ -55,35 +64,17 @@
                             </textarea>
                         </c:when>
                         <c:when test="${type.name() == SectionType.EXPERIENCE || type.name() == SectionType.EDUCATION}">
+                            <c:import url="fragments/organization.jsp"/>
                             <c:set var="organizations" value="${resume.getSection(type)}"/>
                             <jsp:useBean id="organizations" type="ru.javawebinar.basejava.model.OrganizationSection"/>
-                            <c:forEach var="organization" items="${organizations.organizations}">
-                                <dl>
-                                    <dt>Название оргазинации</dt>
-                                    <dd><input type="text" name="orgName" size="${organization.homePage.name.length()}"
-                                               value="${organization.homePage.name}"></dd>
-                                    <br/>
-                                    <dt>Сайт оргазинации</dt>
-                                    <dd><input type="text" name="siteName" size="30"
-                                               value="${organization.homePage.url}"></dd>
-                                </dl>
-                                <c:forEach var="orgItem" items="${organization.positions}">
-                                    <dl>
-                                        <dt>Дата начала</dt>
-                                        <dd><input type="text" name="startDate" size="30"
-                                                   value="${orgItem.startDate}"></dd>
-                                        <dt>Дата окончания</dt>
-                                        <dd><input type="text" name="endDate" size="30"
-                                                   value="${orgItem.endDate}"></dd><br/>
-                                        <dt>Позиция/Должность</dt>
-                                        <dd><input type="text" name="post" size="30"
-                                                   value="${orgItem.title}"></dd><br/>
-                                        <dt>Обяанности</dt>
-                                        <dd><textarea cols="100" name="description" rows="5">${orgItem.description}</textarea></dd>
-                                    </dl>
-                                </c:forEach>
-                                <hr>
+                            <c:set var="orgCount" value="1" scope="request"/>
+                            <c:set var="posCount" value="1" scope="request"/>
+                            <c:forEach var="organization" items="${organizations.organizations}" varStatus="orgCount">
+                                <c:set var="organization" value="${organization}" scope="request"/>
+                                <c:set var="orgCount" value="${orgCount}" scope="request"/>
+                                <c:import url="fragments/organization.jsp"/>
                             </c:forEach>
+                            <c:set var="organization" value="${null}"/>
                         </c:when>
                     </c:choose>
                 </c:when>
