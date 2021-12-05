@@ -13,9 +13,7 @@
         <dd><input type="text" name="siteName" size="30"
                    value="${organization != null ? organization.homePage.url : ""}"></dd>
     </dl>
-    <c:if test="${organization.positions == null}">
-        <c:import url="fragments/position.jsp"/>
-    </c:if>
+    <c:import url="fragments/position.jsp"/>
     <c:forEach var="orgItem" items="${organization.positions}">
         <c:set var="orgItem" value="${orgItem}" scope="request"/>
         <c:import url="fragments/position.jsp"/>
