@@ -13,7 +13,7 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+    <form id="all" method="post" action="resume" enctype="application/x-www-form-urlencoded">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <c:choose>
             <c:when test="${param.get('action').equals('add')}">
@@ -67,12 +67,9 @@
                             <c:import url="fragments/organization.jsp"/>
                             <c:set var="organizations" value="${resume.getSection(type)}"/>
                             <jsp:useBean id="organizations" type="ru.javawebinar.basejava.model.OrganizationSection"/>
-                            <c:set var="orgCount" value="1" scope="request"/>
-                            <c:set var="posCount" value="1" scope="request"/>
-                            <c:forEach var="organization" items="${organizations.organizations}" varStatus="orgCount">
+                            <c:forEach var="organization" items="${organizations.organizations}">
                                 <c:set var="organization" value="${organization}" scope="request"/>
-                                <c:set var="orgCount" value="${orgCount}" scope="request"/>
-                                <c:import url="fragments/organization.jsp"/>
+                                    <c:import url="fragments/organization.jsp"/>
                             </c:forEach>
                             <c:set var="organization" value="${null}"/>
                         </c:when>

@@ -5,12 +5,15 @@ import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.util.Config;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@WebServlet(name = "CustomerController", urlPatterns = "/processCustomer")
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
 
@@ -77,6 +80,9 @@ public class ResumeServlet extends HttpServlet {
                         resume.addSection(type, new ListSection(list));
                     }
                 }
+                case EXPERIENCE, EDUCATION -> {
+                    Map<String, String[]> map = request.getParameterMap();
+                }
             }
         }
         if (!fullName.equals("")) {
@@ -86,5 +92,42 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         response.sendRedirect("resume");
+    }
+
+    private static class RequestCustomer {
+        String orgName;
+        String siteName;
+        String startDate;
+        String endDate;
+        String title;
+        String description;
+
+        public RequestCustomer(String orgName, String siteName, String startDate, String endDate, String title, String description) {
+            this.orgName = orgName;
+            this.siteName = siteName;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.title = title;
+            this.description = description;
+        }
+
+        public static RequestCustomer fromRequestParameters(HttpServletRequest request) {
+            return new RequestCustomer(
+                    request.getParameter("orgName"),
+                    request.getParameter("siteName"),
+                    request.getParameter("startDate"),
+                    request.getParameter("endDate"),
+                    request.getParameter("title"),
+                    request.getParameter("description"));
+        }
+
+        public void setAsRequestAttributes(HttpServletRequest request){
+            request.setAttribute("orgName", orgName);
+            request.setAttribute("siteName", siteName);
+            request.setAttribute("startDate", startDate);
+            request.setAttribute("endDate", endDate);
+            request.setAttribute("title", title);
+            request.setAttribute("description", description);
+        }
     }
 }
