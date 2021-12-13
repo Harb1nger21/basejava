@@ -3,15 +3,21 @@ package ru.javawebinar.basejava.web;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.util.Config;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @WebServlet(name = "CustomerController", urlPatterns = "/processCustomer")
 public class ResumeServlet extends HttpServlet {
@@ -81,7 +87,19 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
                 case EXPERIENCE, EDUCATION -> {
-                    Map<String, String[]> map = request.getParameterMap();
+                    Map<String, String[]> map = request.getParameterMap(); //удалить!
+
+                    RequestCustomer consumer = new RequestCustomer();
+                    List<Link> linkList = consumer.getLinks(request, type.name());
+                    List<Organization> orgList = new ArrayList<>();
+                    for (int i = 0; i < linkList.size(); i++) {
+                        String prefix = type.name() + "_" + i;
+                        orgList.add(new Organization(linkList.get(i), consumer.getPositions(request, prefix)));
+                    }
+                    if (orgList.get(0).getHomePage().getName().equals("")) {
+                        orgList.remove(0);
+                    }
+                    resume.addSection(type, new OrganizationSection(orgList));
                 }
             }
         }
@@ -95,39 +113,61 @@ public class ResumeServlet extends HttpServlet {
     }
 
     private static class RequestCustomer {
-        String orgName;
-        String siteName;
-        String startDate;
-        String endDate;
-        String title;
-        String description;
-
-        public RequestCustomer(String orgName, String siteName, String startDate, String endDate, String title, String description) {
-            this.orgName = orgName;
-            this.siteName = siteName;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.title = title;
-            this.description = description;
+        protected RequestCustomer() {
         }
 
-        public static RequestCustomer fromRequestParameters(HttpServletRequest request) {
-            return new RequestCustomer(
-                    request.getParameter("orgName"),
-                    request.getParameter("siteName"),
-                    request.getParameter("startDate"),
-                    request.getParameter("endDate"),
-                    request.getParameter("title"),
-                    request.getParameter("description"));
+        private List<Link> getLinks(HttpServletRequest request, String prefix) {
+            List<String> orgNames = Arrays.asList(request.getParameterValues(prefix + "_orgName"));
+            List<String> siteNames = Arrays.asList(request.getParameterValues(prefix + "_siteName"));
+
+            List<Link> links = new ArrayList<>();
+            for (int i = 0; i < orgNames.size(); i++) {
+                links.add(new Link(orgNames.get(i), siteNames.get(i)));
+            }
+
+            return links;
         }
 
-        public void setAsRequestAttributes(HttpServletRequest request){
-            request.setAttribute("orgName", orgName);
-            request.setAttribute("siteName", siteName);
-            request.setAttribute("startDate", startDate);
-            request.setAttribute("endDate", endDate);
-            request.setAttribute("title", title);
-            request.setAttribute("description", description);
+        private List<LocalDate> getDateList(List<String> dates) {
+            List<LocalDate> dateList = new ArrayList<>();
+            for (String date : dates) {
+                if (date.equals("настоящее время")) {
+                    date = "3000-01";
+                }
+                dateList.add(DateUtil.of(Integer.parseInt(date.substring(0, 4)), Month.of(Integer.parseInt(date.substring(5)))));
+            }
+            return dateList;
+        }
+
+        public List<Organization.Position> getPositions(HttpServletRequest request, String prefix) {
+            List<String> startDate = Arrays.asList(request.getParameterValues(prefix + "_startDate"));
+            List<String> endDate = Arrays.asList(request.getParameterValues(prefix + "_endDate"));
+            List<String> title = Arrays.asList(request.getParameterValues(prefix + "_title"));
+            List<String> description = Arrays.asList(request.getParameterValues(prefix + "_description"));
+
+            for (int i = 0; i < startDate.size(); i++) {
+                if (startDate.get(i).equals("")) {
+                    startDate = startDate.subList(i + 1, startDate.size());
+                    endDate = endDate.subList(i + 1, endDate.size());
+                    title = title.subList(i + 1, title.size());
+                    description = description.subList(i + 1, description.size());
+                }
+            }
+
+            List<LocalDate> sDates = getDateList(startDate);
+            List<LocalDate> eDates = getDateList(endDate);
+            List<Organization.Position> positions = new ArrayList<>();
+
+            for (int i = 0; i < startDate.size(); i++) {
+                positions.add(new Organization.Position(
+                        sDates.get(i).getYear(),
+                        sDates.get(i).getMonth(),
+                        eDates.get(i).getYear(),
+                        eDates.get(i).getMonth(),
+                        title.get(i),
+                        description.get(i)));
+            }
+            return positions;
         }
     }
 }
