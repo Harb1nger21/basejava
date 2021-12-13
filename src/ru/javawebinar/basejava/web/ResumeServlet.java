@@ -87,8 +87,6 @@ public class ResumeServlet extends HttpServlet {
                     }
                 }
                 case EXPERIENCE, EDUCATION -> {
-                    Map<String, String[]> map = request.getParameterMap(); //удалить!
-
                     RequestCustomer consumer = new RequestCustomer();
                     List<Link> linkList = consumer.getLinks(request, type.name());
                     List<Organization> orgList = new ArrayList<>();
