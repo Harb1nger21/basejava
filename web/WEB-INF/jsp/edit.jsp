@@ -38,34 +38,37 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <h3>${type.title}</h3>
             <c:choose>
-                <c:when test="${resume.getSection(type) == null &&
+                <c:when test="${resume.getSection(type) == null}">
+                    <c:choose>
+                        <c:when test="${resume.getSection(type) == null &&
                  (type.name() == SectionType.PERSONAL ||
                   type.name() == SectionType.OBJECTIVE ||
                    type.name() == SectionType.ACHIEVEMENT ||
                     type.name() == SectionType.QUALIFICATIONS)}">
-                    <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
-                </c:when>
-                <c:when test="${resume.getSection(type) == null &&
-                (type.name() == SectionType.EXPERIENCE || type.name() == SectionType.EDUCATION)}">
-                    <dl>
-                        <dt>Название оргазинации</dt>
-                        <dd><input type="text" name="${type.name()}_orgName" size="30" value=""></dd>
-                        <br/>
-                        <dt>Сайт оргазинации</dt>
-                        <dd><input type="text" name="${type.name()}_siteName" size="30" value=""/></dd>
-                    </dl>
-                    <dl>
-                        <dt>Дата начала</dt>
-                        <dd><input type="text" name="${type.name()}_0_startDate" size="30" value=""></dd>
-                        <dt>Дата окончания</dt>
-                        <dd><input type="text" name="${type.name()}_0_endDate" size="30" value=""></dd>
-                        <br/>
-                        <dt>Позиция/Должность</dt>
-                        <dd><input type="text" name="${type.name()}_0_title" size="30" value=""></dd>
-                        <br/>
-                        <dt>Обяанности</dt>
-                        <dd><textarea cols="100" name="${type.name()}_0_description" rows="5"></textarea></dd>
-                    </dl>
+                            <textarea id="tx" cols="100" name="${type.name()}" rows="2"></textarea>
+                        </c:when>
+                        <c:when test="${type.name() == SectionType.EXPERIENCE || type.name() == SectionType.EDUCATION}">
+                            <dl>
+                                <dt>Название оргазинации</dt>
+                                <dd><input type="text" name="${type.name()}_orgName" size="30" value=""></dd>
+                                <br/>
+                                <dt>Сайт оргазинации</dt>
+                                <dd><input type="text" name="${type.name()}_siteName" size="30" value=""/></dd>
+                            </dl>
+                            <dl id="nullPos">
+                                <dt>Дата начала</dt>
+                                <dd><input type="text" name="${type.name()}_0_startDate" size="30" value=""></dd>
+                                <dt>Дата окончания</dt>
+                                <dd><input type="text" name="${type.name()}_0_endDate" size="30" value=""></dd>
+                                <br/>
+                                <dt>Позиция/Должность</dt>
+                                <dd><input type="text" name="${type.name()}_0_title" size="30" value=""></dd>
+                                <br/>
+                                <dt>Обяанности</dt>
+                                <dd><textarea cols="100" name="${type.name()}_0_description" rows="5"></textarea></dd>
+                            </dl>
+                        </c:when>
+                    </c:choose>
                 </c:when>
                 <c:when test="${resume.getSection(type) != null}">
                     <c:choose>
@@ -76,7 +79,7 @@
                             <c:set var="content" value="${resume.getSection(type)}"/>
                             <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
                             <textarea cols="100" name="${type.name()}" rows="${content.items.size()}">
-<c:forEach var="item" items="${content.items}">${item.trim()}
+<c:forEach var="item" items="${content.items}">${item}
 </c:forEach>
                             </textarea>
                         </c:when>
@@ -113,13 +116,14 @@
                                     <dd><input type="text" name="${type.name()}_siteName" size="30"
                                                value="${organization != null ? organization.homePage.url : ""}"></dd>
                                 </dl>
+                                <h5>Добавить новую позицию</h5>
                                 <dl>
                                     <dt>Дата начала</dt>
                                     <dd><input type="text" name="${type.name()}_${counter.count}_startDate"
-                                               size="30" value=""></dd>
+                                               size="30" placeholder="Пример: 2000-01" value=""></dd>
                                     <dt>Дата окончания</dt>
                                     <dd><input type="text" name="${type.name()}_${counter.count}_endDate"
-                                               size="30" value="">
+                                               size="30" placeholder="Пример: 2000-01" value="">
                                     </dd>
                                     <br/>
                                     <dt>Позиция/Должность</dt>
@@ -132,6 +136,7 @@
                                                   rows="5"></textarea>
                                     </dd>
                                 </dl>
+                                <h5>Текущие позиции</h5>
                                 <c:forEach var="orgItem" items="${organization.positions}">
                                     <dl>
                                         <dt>Дата начала</dt>
@@ -165,6 +170,7 @@
                                     </dl>
                                 </c:forEach>
                                 <c:set var="orgItem" value="${null}"/>
+                                <hr/>
                             </c:forEach>
                             <c:set var="organization" value="${null}"/>
                         </c:when>
