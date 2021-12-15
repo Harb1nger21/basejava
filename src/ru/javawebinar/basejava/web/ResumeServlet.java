@@ -142,7 +142,7 @@ public class ResumeServlet extends HttpServlet {
         List<String> description = Arrays.asList(request.getParameterValues(prefix + "_description"));
 
         for (int i = 0; i < startDate.size(); i++) {
-            if (startDate.get(i).equals("")) {
+            if (startDate.get(i).equals("") || endDate.get(i).equals("")) {
                 startDate = startDate.subList(i + 1, startDate.size());
                 endDate = endDate.subList(i + 1, endDate.size());
                 title = title.subList(i + 1, title.size());
