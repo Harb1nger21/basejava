@@ -14,10 +14,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @WebServlet(name = "CustomerController", urlPatterns = "/processCustomer")
 public class ResumeServlet extends HttpServlet {
@@ -99,7 +97,9 @@ public class ResumeServlet extends HttpServlet {
                     if (orgList.get(0).getHomePage().getName().equals("")) {
                         orgList.remove(0);
                     }
-                    resume.addSection(type, new OrganizationSection(orgList));
+                    if (orgList.size() != 0) {
+                        resume.addSection(type, new OrganizationSection(orgList));
+                    }
                 }
             }
         }
