@@ -26,3 +26,20 @@ alter table contact
 
 create unique index contact__uuid_type_index
     on contact (resume_uuid, type);
+
+-- auto-generated definition
+create table section
+(
+    id          serial
+        constraint sections_pk
+            primary key,
+    type        text     not null,
+    value       text     not null,
+    resume_uuid char(36) not null references resume (uuid) on delete cascade
+);
+
+alter table section
+    owner to postgres;
+
+create unique index sections_type_resume_id_uindex
+    on section (type, resume_uuid);
