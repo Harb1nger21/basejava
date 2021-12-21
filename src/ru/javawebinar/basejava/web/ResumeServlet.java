@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @WebServlet(name = "CustomerController", urlPatterns = "/processCustomer")
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
-    private boolean isCreate = false;
 
     @Override
     public void init() {
@@ -44,7 +43,6 @@ public class ResumeServlet extends HttpServlet {
             case "view" -> resume = storage.get(uuid);
             case "add" -> {
                 resume = Resume.EMPTY;
-                isCreate = true;
             }
             case "edit" -> {
                 resume = storage.get(uuid);
