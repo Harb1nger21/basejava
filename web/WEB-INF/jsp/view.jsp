@@ -1,4 +1,7 @@
 <%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.model.OrganizationSection" %>
+<%@ page import="ru.javawebinar.basejava.model.ListSection" %>
+<%@ page import="ru.javawebinar.basejava.util.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -24,36 +27,32 @@
             <jsp:useBean id="sections"
                          type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType, ru.javawebinar.basejava.model.AbstractSection>"/>
             <c:set var="key" value="${sections.key}"/>
+            <c:set var="section" value="${sections.value}"/>
+            <jsp:useBean id="section" type="ru.javawebinar.basejava.model.AbstractSection"/>
     <h3>${key.title}</h3>
     <c:choose>
         <c:when test="${key == SectionType.PERSONAL || key == SectionType.OBJECTIVE}">
             <%=sections.getValue()%>
         </c:when>
         <c:when test="${key == SectionType.ACHIEVEMENT || key == SectionType.QUALIFICATIONS}">
-            <c:set var="content" value="${sections.value}"/>
-            <jsp:useBean id="content" type="ru.javawebinar.basejava.model.ListSection"/>
             <ul>
-                <c:forEach var="item" items="${content.items}">
+                <c:forEach var="item" items="<%=((ListSection)section).getItems()%>">
                     <li><c:out value="${item}"/></li>
                 </c:forEach>
             </ul>
         </c:when>
         <c:when test="${key == SectionType.EXPERIENCE || key == SectionType.EDUCATION}">
-            <c:set var="orgContent" value="${sections.value}"/>
-            <jsp:useBean id="orgContent" type="ru.javawebinar.basejava.model.OrganizationSection"/>
             <ul>
-                <c:forEach var="organization" items="${orgContent.organizations}">
+                <c:forEach var="organization" items="<%=((OrganizationSection)section).getOrganizations()%>">
                     <h4><a href="${organization.homePage.url}">${organization.homePage.name}</a></h4>
                     <c:forEach var="position" items="${organization.positions}">
-                        <fmt:parseDate value="${position.startDate}" type="date" pattern="yyyy-MM-dd" var="parsedStart"/>
-                        <fmt:formatDate value="${parsedStart}" type="date" pattern="yyyy.MM" var="start"/>
-                        <fmt:parseDate value="${position.endDate}" type="date" pattern="yyyy-MM-dd" var="parsedEnd"/>
-                        <fmt:formatDate value="${parsedEnd}" type="date" pattern="yyyy.MM" var="end"/>
-                        <c:out value="${start} - ${position.endDate.year > 2500 ? 'настояшее время' : end}"/><br/>
+                        <jsp:useBean id="position" type="ru.javawebinar.basejava.model.Organization.Position"/>
+                        <%=HtmlUtil.formatDates(position)%><br/>
                         <c:if test="${key == SectionType.EXPERIENCE}">
-                            <h5>${position.title}</h5>
+                            <strong><%=position.getTitle()%>
+                            </strong><br/>
                         </c:if>
-                        <c:out value="${position.description}"/><br/>
+                        <%=position.getDescription()%><br/>
                     </c:forEach>
                 </c:forEach>
             </ul>

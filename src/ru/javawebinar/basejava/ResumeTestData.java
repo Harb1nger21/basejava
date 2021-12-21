@@ -8,16 +8,16 @@ import java.util.*;
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
         Resume newResume = new Resume(uuid, fullName);
-        newResume.addContact(ContactType.PHONE, "79218550482");
-        newResume.addContact(ContactType.SKYPE, "grigory.kislin");
-        newResume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        newResume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
-        newResume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
+        newResume.setContact(ContactType.PHONE, "79218550482");
+        newResume.setContact(ContactType.SKYPE, "grigory.kislin");
+        newResume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        newResume.setContact(ContactType.GITHUB, "https://github.com/gkislin");
+        newResume.setContact(ContactType.MAIL, "gkislin@yandex.ru");
 
-        newResume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
-        newResume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        newResume.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
+        newResume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
-        newResume.addSection(SectionType.ACHIEVEMENT, new ListSection(
+        newResume.setSection(SectionType.ACHIEVEMENT, new ListSection(
                 Arrays.asList(
                         "С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.",
                         "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.",
@@ -27,7 +27,7 @@ public class ResumeTestData {
                         "Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа."
                 )));
 
-        newResume.addSection(SectionType.QUALIFICATIONS, new ListSection(
+        newResume.setSection(SectionType.QUALIFICATIONS, new ListSection(
                 Arrays.asList(
                         "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                         "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
@@ -45,7 +45,7 @@ public class ResumeTestData {
                         "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования",
                         "Родной русский, английский \"upper intermediate\""
                 )));
-        newResume.addSection(SectionType.EXPERIENCE,
+        newResume.setSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Java Online Projects", null,
                                 new Organization.Position(2013, Month.OCTOBER, "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
@@ -66,7 +66,7 @@ public class ResumeTestData {
                 )
         );
 
-        newResume.addSection(SectionType.EDUCATION,
+        newResume.setSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Coursera", "",
                                 new Organization.Position(2013, Month.MARCH, 2013, Month.MAY, "student", "\"Functional Programming Principles in Scala\" by Martin Odersky")),
@@ -88,16 +88,16 @@ public class ResumeTestData {
 
     public static void main(String[] args) {
         Resume resume = new Resume("Григорий Кислин");
-        resume.addContact(ContactType.PHONE, "79218550482");
-        resume.addContact(ContactType.SKYPE, "grigory.kislin");
-        resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
-        resume.addContact(ContactType.MAIL, "gkislin@yandex.ru");
+        resume.setContact(ContactType.PHONE, "79218550482");
+        resume.setContact(ContactType.SKYPE, "grigory.kislin");
+        resume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        resume.setContact(ContactType.GITHUB, "https://github.com/gkislin");
+        resume.setContact(ContactType.MAIL, "gkislin@yandex.ru");
 
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
-        resume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        resume.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
+        resume.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
-        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection(
                 Arrays.asList(
                         "С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.",
                         "Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.",
@@ -107,7 +107,7 @@ public class ResumeTestData {
                         "Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа."
                 )));
 
-        resume.addSection(SectionType.ACHIEVEMENT, new ListSection(
+        resume.setSection(SectionType.ACHIEVEMENT, new ListSection(
                 Arrays.asList(
                         "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                         "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
@@ -125,7 +125,7 @@ public class ResumeTestData {
                         "Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования",
                         "Родной русский, английский \"upper intermediate\""
                 )));
-        resume.addSection(SectionType.EXPERIENCE,
+        resume.setSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Java Online Projects", "",
                                 new Organization.Position(2013, Month.OCTOBER, "Автор проекта", "Создание, организация и проведение Java онлайн проектов и стажировок.")),
@@ -146,7 +146,7 @@ public class ResumeTestData {
                 )
         );
 
-        resume.addSection(SectionType.EDUCATION,
+        resume.setSection(SectionType.EDUCATION,
                 new OrganizationSection(
                         new Organization("Coursera", null,
                                 new Organization.Position(2013, Month.MARCH, 2013, Month.MAY, "student", "\"Functional Programming Principles in Scala\" by Martin Odersky")),
