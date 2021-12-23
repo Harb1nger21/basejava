@@ -56,15 +56,15 @@ public class DataStrategy implements Strategy {
     public Resume readResume(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            readEachWithIOException(resume, dis, update -> update.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readEachWithIOException(resume, dis, update -> update.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readEachWithIOException(resume, dis, update -> {
                 SectionType title = SectionType.valueOf(dis.readUTF());
                 switch (title) {
-                    case PERSONAL, OBJECTIVE -> update.addSection(title, new TextSection(dis.readUTF()));
+                    case PERSONAL, OBJECTIVE -> update.setSection(title, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATIONS -> {
                         List<String> achievList = new ArrayList<>();
                         readEachWithIOException(resume, dis, achiev -> achievList.add(dis.readUTF()));
-                        update.addSection(title, new ListSection(achievList));
+                        update.setSection(title, new ListSection(achievList));
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> orglist = new ArrayList<>();
@@ -72,7 +72,7 @@ public class DataStrategy implements Strategy {
                             Organization organization = new Organization(new Link(dis.readUTF(), convert(dis.readUTF())), readPositions(resume, dis));
                             orglist.add(organization);
                         });
-                        update.addSection(title, new OrganizationSection(orglist));
+                        update.setSection(title, new OrganizationSection(orglist));
                     }
                 }
             });
@@ -100,7 +100,7 @@ public class DataStrategy implements Strategy {
     }
 
     private String convert(String string) {
-        return (!string.equals("null")) ? string: null;
+        return (!string.equals("null")) ? string : null;
     }
 
     private List<Organization.Position> readPositions(Resume resume, DataInputStream dis) throws IOException {
