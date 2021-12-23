@@ -24,7 +24,7 @@ public class MainFile {
 
     public static void filesList(File file) {
         if (file.isDirectory()) {
-            System.out.println(INDENTATION.repeat(depth++) + file.getName() + " package");
+//            System.out.println(INDENTATION.repeat(depth++) + file.getName() + " package");
             List<File> files = Arrays.asList(Objects.requireNonNull(file.listFiles()));
             files.sort(Comparator.comparing(File::isFile));
             if (files.size() == 0) {
@@ -37,7 +37,7 @@ public class MainFile {
                 }
             }
         } else {
-            System.out.println(INDENTATION.repeat(depth) + file.getName() + " file");
+//            System.out.println(INDENTATION.repeat(depth) + file.getName() + " file");
         }
     }
 }

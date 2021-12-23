@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class ResumeServlet extends HttpServlet {
             case "view" -> resume = storage.get(uuid);
             case "add" -> {
                 resume = Resume.EMPTY;
+                break;
             }
             case "edit" -> {
                 resume = storage.get(uuid);
