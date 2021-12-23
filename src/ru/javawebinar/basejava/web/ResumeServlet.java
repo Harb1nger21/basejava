@@ -36,32 +36,37 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume resume;
         switch (action) {
-            case "delete" -> {
+            case "delete": {
                 storage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
             }
-            case "view" -> resume = storage.get(uuid);
-            case "add" -> {
+            case "view":
+                resume = storage.get(uuid);
+                break;
+            case "add": {
                 resume = Resume.EMPTY;
                 break;
             }
-            case "edit" -> {
+            case "edit": {
                 resume = storage.get(uuid);
                 for (SectionType type : SectionType.values()) {
                     AbstractSection section = resume.getSection(type);
                     switch (type) {
-                        case OBJECTIVE, PERSONAL:
+                        case OBJECTIVE:
+                        case PERSONAL:
                             if (section == null) {
                                 section = TextSection.EMPTY;
                             }
                             break;
-                        case ACHIEVEMENT, QUALIFICATIONS:
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
                             if (section == null) {
                                 section = ListSection.EMPTY;
                             }
                             break;
-                        case EXPERIENCE, EDUCATION:
+                        case EXPERIENCE:
+                        case EDUCATION:
                             OrganizationSection orgSection = (OrganizationSection) section;
                             List<Organization> emptyOrganizations = new ArrayList<>();
                             emptyOrganizations.add(Organization.EMPTY);
@@ -78,8 +83,9 @@ public class ResumeServlet extends HttpServlet {
                     }
                     resume.setSection(type, section);
                 }
+                break;
             }
-            default -> throw new IllegalArgumentException("Action " + action + " is illegal");
+            default: throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", resume);
         request.getRequestDispatcher(
@@ -110,15 +116,20 @@ public class ResumeServlet extends HttpServlet {
                 resume.getSections().remove(type);
             } else {
                 switch (type) {
-                    case PERSONAL, OBJECTIVE -> resume.setSection(type, new TextSection(value));
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> list = List.of(value.split("\r\n"));
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS: {
+                        List<String> list = Arrays.asList(value.split("\r\n"));
                         list = list.stream()
                                 .filter(s -> !s.equals(""))
                                 .collect(Collectors.toList());
                         resume.setSection(type, new ListSection(list));
                     }
-                    case EXPERIENCE, EDUCATION -> {
+                    case EXPERIENCE:
+                    case EDUCATION: {
                         List<Organization> orgs = new ArrayList<>();
                         List<Link> links = getLinks(request, type.name());
                         for (int i = 0; i < links.size(); i++) {
@@ -138,8 +149,10 @@ public class ResumeServlet extends HttpServlet {
         }
         if (!HtmlUtil.isEmpty(fullName)) {
             switch (action) {
-                case "add" -> storage.save(resume);
-                case "edit" -> storage.update(resume);
+                case "add":
+                    storage.save(resume);
+                case "edit":
+                    storage.update(resume);
             }
         }
         response.sendRedirect("resume");
