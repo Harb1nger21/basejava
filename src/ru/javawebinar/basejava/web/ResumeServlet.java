@@ -43,8 +43,13 @@ public class ResumeServlet extends HttpServlet {
             }
             case "view" -> resume = storage.get(uuid);
             case "add" -> {
-                resume = Resume.EMPTY;
-                break;
+                resume = new Resume("");
+                resume.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);
+                resume.setSection(SectionType.PERSONAL, TextSection.EMPTY);
+                resume.setSection(SectionType.ACHIEVEMENT, ListSection.EMPTY);
+                resume.setSection(SectionType.QUALIFICATIONS, ListSection.EMPTY);
+                resume.setSection(SectionType.EXPERIENCE, new OrganizationSection(Organization.EMPTY));
+                resume.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY));
             }
             case "edit" -> {
                 resume = storage.get(uuid);
