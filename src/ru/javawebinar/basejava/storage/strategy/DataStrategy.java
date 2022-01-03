@@ -26,24 +26,28 @@ public class DataStrategy implements Strategy {
                 SectionType type = section.getKey();
                 dos.writeUTF(type.name());
                 switch (type) {
-                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) section.getValue()).getContent());
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection) section.getValue()).getContent());
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS: {
                         List<String> sectionList = ((ListSection) section.getValue()).getItems();
                         writeEachWithIOException(sectionList, dos, dos::writeUTF);
                     }
-                    case EXPERIENCE, EDUCATION -> {
+                    case EXPERIENCE:
+                    case EDUCATION: {
                         List<Organization> organizationList = ((OrganizationSection) section.getValue()).getOrganizations();
                         writeEachWithIOException(organizationList, dos, organization -> {
                             Link link = organization.getHomePage();
                             dos.writeUTF(link.getName());
-                            dos.writeUTF(Objects.requireNonNullElse(link.getUrl(), "null"));
+                            dos.writeUTF(link.getUrl());
                             List<Organization.Position> positions = organization.getPositions();
                             writeEachWithIOException(positions, dos, position -> {
                                 writeDate(dos, position.getStartDate());
                                 writeDate(dos, position.getEndDate());
                                 dos.writeUTF(position.getTitle());
                                 String description = position.getDescription();
-                                dos.writeUTF(Objects.requireNonNullElse(description, "null"));
+                                dos.writeUTF(description);
                             });
                         });
                     }
@@ -60,13 +64,17 @@ public class DataStrategy implements Strategy {
             readEachWithIOException(resume, dis, update -> {
                 SectionType title = SectionType.valueOf(dis.readUTF());
                 switch (title) {
-                    case PERSONAL, OBJECTIVE -> update.setSection(title, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        update.setSection(title, new TextSection(dis.readUTF()));
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS: {
                         List<String> achievList = new ArrayList<>();
                         readEachWithIOException(resume, dis, achiev -> achievList.add(dis.readUTF()));
                         update.setSection(title, new ListSection(achievList));
                     }
-                    case EXPERIENCE, EDUCATION -> {
+                    case EXPERIENCE:
+                    case EDUCATION: {
                         List<Organization> orglist = new ArrayList<>();
                         readEachWithIOException(resume, dis, org -> {
                             Organization organization = new Organization(new Link(dis.readUTF(), convert(dis.readUTF())), readPositions(resume, dis));
